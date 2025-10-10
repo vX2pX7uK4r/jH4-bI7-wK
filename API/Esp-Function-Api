@@ -89,14 +89,19 @@ end
 game:GetService("RunService").Stepped:Connect(function()
     if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
         for _, BillboardGui in ipairs(hui:GetChildren()) do
-            if BillboardGui.Adornee == nil or BillboardGui.Adornee.Parent == nil then
-                BillboardGui:Destroy()
+            if BillboardGui:IsA("BillboardGui") then
+                if BillboardGui.Adornee == nil or BillboardGui.Adornee.Parent == nil then
+                    BillboardGui:Destroy()
+                end
             end
         end
-        for _, Distance in ipairs(hui:GetChildren()) do
-            if Distance.Adornee and game.Players.LocalPlayer.Character then
-                local AdorneePosition = Distance.Adornee:IsA("BasePart") and Distance.Adornee.Position or Distance.Adornee:GetPivot().Position
-		    	Distance:FindFirstChild("Distance").Text = "["..math.floor((AdorneePosition - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude).."m]"
+        for _, BillboardGui in ipairs(hui:GetChildren()) do
+            if BillboardGui:IsA("BillboardGui") then
+                local Distance = BillboardGui:FindFirstChild("Distance")
+                if Distance and Distance.Adornee and game.Players.LocalPlayer.Character then
+                    local AdorneePosition = Distance.Adornee:IsA("BasePart") and Distance.Adornee.Position or Distance.Adornee:GetPivot().Position
+		    	    Distance:FindFirstChild("Distance").Text = "["..math.floor((AdorneePosition - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude).."m]"
+                end
             end
         end
     end
