@@ -97,7 +97,7 @@ game:GetService("RunService").Stepped:Connect(function()
         end
         for _, BillboardGui in ipairs(hui:GetChildren()) do
             if BillboardGui:IsA("BillboardGui") then
-                local Distance = BillboardGui:FindFirstChild("Distance")
+                local Distance = BillboardGui.BillboardGui:FindFirstChild("Distance")
                 if Distance and Distance.Adornee and game.Players.LocalPlayer.Character then
                     local AdorneePosition = Distance.Adornee:IsA("BasePart") and Distance.Adornee.Position or Distance.Adornee:GetPivot().Position
 		    	    Distance:FindFirstChild("Distance").Text = "["..math.floor((AdorneePosition - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude).."m]"
