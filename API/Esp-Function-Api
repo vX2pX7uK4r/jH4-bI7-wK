@@ -17,7 +17,7 @@ function EspFunctionList:DrawingObjects(Object, config)
                 local NameTextLabel = BillboardGui:FindFirstChild("Name")
                 local DistanceTextLabel = BillboardGui:FindFirstChild("Distance")
                 if NameTextLabel then
-                    NameTextLabel.Text = EspConfig.CustomName or "nil"
+                    NameTextLabel.Text = EspConfig.CustomName or Object.Name or "nil"
                     NameTextLabel.TextColor3 = EspConfig.Color3 or Color3.new(1, 1, 1)
                     NameTextLabel.Visible = getVisibility(EspConfig.NameVisible)
                     NameTextLabel.TextTransparency = EspConfig.TextTransparency or 0
@@ -218,7 +218,7 @@ spawn(function()
     while task.wait(20) do
         for _, BillboardGui in ipairs(hui:GetChildren()) do
             if BillboardGui:IsA("BillboardGui") then
-                if BillboardGui.Adornee then
+                if BillboardGui.Adornee and BillboardGui.Adornee.Parent then
                     local success, result = pcall(function()
                         return game.Workspace:FindFirstChild(BillboardGui.Adornee.Parent.Name, true) == nil
                     end)
@@ -234,8 +234,7 @@ spawn(function()
 end)
 
 
-print("[绘制(Beta)]Api初始化成功")
-print("使用Help()查看帮助")
+print("[绘制(Beta)]Api初始化成功,使用Help()查看帮助")
 
 return EspFunctionList
 
