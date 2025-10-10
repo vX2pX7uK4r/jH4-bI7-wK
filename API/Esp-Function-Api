@@ -130,6 +130,6 @@ game:GetService("RunService").Stepped:Connect(function()
 end)
 
 print("[绘制(Beta)]初始化成功")
-print("使用EspFunctionList:Help()查看帮助")
+print("使用Help()查看帮助")
 
 return EspFunctionList
