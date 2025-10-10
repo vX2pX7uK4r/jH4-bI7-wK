@@ -139,7 +139,7 @@ function EspFunctionList:DestroyAllDrawing()
     return "销毁所有绘制,数量:"..count
 end
 
-function EspFunctionList:GetDrawingList(showAdornee)
+function EspFunctionList:GetDrawingList(showAdornee, shouldPrint)
     local billboardGuis = {}
     local countTable = {}
     for _, child in ipairs(hui:GetChildren()) do
@@ -153,18 +153,20 @@ function EspFunctionList:GetDrawingList(showAdornee)
             countTable[key] = (countTable[key] or 0) + 1
         end
     end
-    local statusText = ""
-    for name, count in pairs(countTable) do
-        if statusText ~= "" then
-            statusText = statusText .. ", "
+    if shouldPrint then
+        local statusText = ""
+        for name, count in pairs(countTable) do
+            if statusText ~= "" then
+                statusText = statusText .. ", "
+            end
+            statusText = statusText .. string.format("%s(%d)", name, count)
         end
-        statusText = statusText .. string.format("%s(%d)", name, count)
-    end
-    if #billboardGuis == 0 then
-        print("当前绘制数量: 0")
-    else
-        local displayType = showAdornee and "绑定对象(Adornee)" or "绘制名称(Name)"
-        print(string.format("当前绘制数量: %d | %s状态: %s", #billboardGuis, displayType, statusText))
+        if #billboardGuis == 0 then
+            print("当前绘制数量: 0")
+        else
+            local displayType = showAdornee and "绑定对象(Adornee)" or "绘制名称(Name)"
+            print(string.format("当前绘制数量: %d | %s状态: %s", #billboardGuis, displayType, statusText))
+        end
     end
     return billboardGuis
 end
@@ -197,9 +199,9 @@ print([[
 • DestroyAllDrawing() - 销毁所有绘制
   return(返回字符串): 销毁数量
 ====================================== 
-• GetDrawingList(showAdornee) - 获取当前所有绘制列表
-  参数: showAdornee 显示绑定对象名称 (true/false)
-  return(返回Tabel): 包含所有绘制名称和绑定对象名称的表
+• GetDrawingList(showAdornee, shouldPrint) - 获取当前所有绘制列表
+  参数: showAdornee(显示绑定对象名称 true/false 默认false), shouldPrint(是否打印设置 true/false 默认false)
+  return(返回表): 包含所有绘制信息的表格
 ======================================
 • Help() - 显示此帮助信息
 ]])
