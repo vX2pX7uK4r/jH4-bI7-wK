@@ -1,1 +1,107 @@
+local hui = gethui()
+local EspFunctionList = {}
+function EspFunctionList:DrawingObjects(Object,config)
+    local EspConfig = config or {}
+    if Object then
+        if hui:FindFirstChild(EspConfig.BillboardGuiName or Object) then
+            local BillboardGui = hui:FindFirstChild(EspConfig.BillboardGuiName or Object)
+            if BillboardGui.Adornee == Object then
+				BillboardGui:FindFirstChild("Name").Text = EspConfig.CustomName or "nil"
+                BillboardGui:FindFirstChild("Name").TextColor3 = EspConfig.Color3 or Color3.new(1, 1, 1)
+                BillboardGui.StudsOffset = EspConfig.StudsOffset or Vector3.new(0.00, 3.00, 0.00)
+                BillboardGui.Size = EspConfig.Size or UDim2.new(0.00, 100.00, 0.00, 40.00)
+                if EspConfig.HighlightMode or false then
+                    if BillboardGui:FindFirstChildOfClass("Highlight") then
+                        BillboardGui:FindFirstChildOfClass("Highlight").FillColor = EspConfig.Color3 or Color3.new(1, 1, 1)
+                    else
+						local Highlight = Instance.new("Highlight")
+						Highlight.OutlineTransparency = 1
+						Highlight.Adornee = Object
+						Highlight.FillColor = EspConfig.Color3 or Color3.new(1, 1, 1)
+						Highlight.FillTransparency = 0.6
+						Highlight.Parent = BillboardGui
+                    end
+                else
+                    if BillboardGui:FindFirstChildOfClass("Highlight") then
+                        BillboardGui:FindFirstChildOfClass("Highlight"):Destroy()
+                    end
+                end
+                return "更新绘制:"..BillboardGui.Name
+            end
+        end
+		local BillboardGui = Instance.new("BillboardGui")
+		local Name = Instance.new("TextLabel")
+		local Name_1 = Instance.new("TextLabel")
+		BillboardGui.AlwaysOnTop = true
+		BillboardGui.Name = EspConfig.BillboardGuiName or Object.Name
+		BillboardGui.Size = EspConfig.Size or UDim2.new(0.00, 100.00, 0.00, 40.00)
+		BillboardGui.ClipsDescendants = true
+		BillboardGui.Adornee = Object
+		BillboardGui.MaxDistance = math.huge
+		BillboardGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+		BillboardGui.StudsOffset = EspConfig.StudsOffset or Vector3.new(0.00, 3.00, 0.00)
+		BillboardGui.Parent = hui
+		Name.Name = "Name"
+		Name.TextWrapped = true
+		Name.TextStrokeTransparency = 0
+		Name.TextScaled = true
+		Name.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+		Name.Size = UDim2.new(1.00, 0.00, 0.50, 0.00)
+		Name.Text = EspConfig.CustomName or "nil"
+		Name.TextColor3 = EspConfig.Color3 or Color3.new(1, 1, 1)
+		Name.BackgroundTransparency = 1
+		Name.Parent = BillboardGui
+		Name_1.Name = "Distance"
+		Name_1.TextWrapped = true
+		Name_1.TextStrokeTransparency = 0.4000000059604645
+		Name_1.TextScaled = true
+		Name_1.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+		Name_1.Size = UDim2.new(1.00, 0.00, 0.50, 0.00)
+		Name_1.Text = "[无数据]"
+		Name_1.TextColor3 = Color3.new(0.80, 0.80, 0.80)
+		Name_1.BackgroundTransparency = 1
+		Name_1.Position = UDim2.new(0.00, 0.00, 0.50, 0.00)
+		Name_1.Parent = BillboardGui
+        if #EspConfig.CustomName == 0 then
+            Name.Visible = false
+        end
+		if EspConfig.HighlightMode or false then
+			local Highlight = Instance.new("Highlight")
+			Highlight.OutlineTransparency = 1
+			Highlight.Adornee = Object
+			Highlight.FillColor = EspConfig.Color3 or Color3.new(1, 1, 1)
+			Highlight.FillTransparency = 0.6
+			Highlight.Parent = BillboardGui
+		end
+    end
+end
 
+function EspFunctionList:DestroyDrawing(BillboardGuiName)
+    if BillboardGuiName then
+		for _, BillboardGui in ipairs(hui:GetChildren()) do
+			if BillboardGui.Name == BillboardGuiName then
+				BillboardGui:Destroy()
+			end
+		end
+    end
+end
+
+game:GetService("RunService").Stepped:Connect(function()
+    if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        for _, BillboardGui in ipairs(hui:GetChildren()) do
+            if BillboardGui.Adornee == nil or BillboardGui.Adornee.Parent == nil then
+                BillboardGui:Destroy()
+            end
+        end
+        for _, Distance in ipairs(hui:GetChildren()) do
+            if Distance.Adornee and game.Players.LocalPlayer.Character then
+                local AdorneePosition = Distance.Adornee:IsA("BasePart") and Distance.Adornee.Position or Distance.Adornee:GetPivot().Position
+		    	Distance:FindFirstChild("Distance").Text = "["..math.floor((AdorneePosition - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude).."m]"
+            end
+        end
+    end
+end)
+
+print("[绘制]初始化成功")
+
+return EspFunctionList
