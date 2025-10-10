@@ -63,7 +63,7 @@ function EspFunctionList:DrawingObjects(Object, config)
         Distance.BackgroundTransparency = 1
         Distance.Position = UDim2.new(0.00, 0.00, 0.50, 0.00)
         Distance.Parent = BillboardGui
-        if #EspConfig.CustomName == 0 then
+        if not EspConfig.CustomName or #EspConfig.CustomName == 0 then
             Name.Visible = false
         end
         if EspConfig.HighlightMode or false then
@@ -108,6 +108,6 @@ game:GetService("RunService").Stepped:Connect(function()
     end
 end)
 
-print("[绘制V0.0.2]初始化成功")
+print("[绘制(Beta)]初始化成功")
 
 return EspFunctionList
