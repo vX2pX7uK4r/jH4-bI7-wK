@@ -1,6 +1,14 @@
 local hui = gethui()
 local EspFunctionList = {}
 
+local function getVisibility(configValue)
+    if configValue == nil then
+        return true
+    else
+        return configValue
+    end
+end
+
 function EspFunctionList:DrawingObjects(Object, config)
     local EspConfig = config or {}
     if Object then
@@ -12,8 +20,8 @@ function EspFunctionList:DrawingObjects(Object, config)
                 BillboardGui.Size = EspConfig.Size or UDim2.new(0.00, 100.00, 0.00, 40.00)
                 BillboardGui.Name = EspConfig.BillboardGuiName or Object.Name
                 BillboardGui:FindFirstChild("Distance").TextColor3 = EspConfig.DistanceColor3 or Color3.new(0.80, 0.80, 0.80)
-                BillboardGui:FindFirstChild("Name").Visible = (EspConfig.NameVisible ~= nil) and EspConfig.NameVisible or true
-                BillboardGui:FindFirstChild("Distance").Visible = (EspConfig.DistanceVisible ~= nil) and EspConfig.DistanceVisible or true
+                BillboardGui:FindFirstChild("Name").Visible = getVisibility(EspConfig.NameVisible)
+                BillboardGui:FindFirstChild("Distance").Visible = getVisibility(EspConfig.DistanceVisible)
                 if EspConfig.HighlightMode or false then
                     if BillboardGui:FindFirstChildOfClass("Highlight") then
                         BillboardGui:FindFirstChildOfClass("Highlight").FillColor = EspConfig.Color3 or Color3.new(1, 1, 1)
@@ -56,7 +64,7 @@ function EspFunctionList:DrawingObjects(Object, config)
         Name.TextColor3 = EspConfig.Color3 or Color3.new(1, 1, 1)
         Name.BackgroundTransparency = 1
         Name.Parent = BillboardGui
-        Name.Visible = (EspConfig.NameVisible ~= nil) and EspConfig.NameVisible or true
+        Name.Visible = getVisibility(EspConfig.NameVisible)
         Distance.Name = "Distance"
         Distance.TextWrapped = true
         Distance.TextStrokeTransparency = 0.4000000059604645
@@ -68,7 +76,7 @@ function EspFunctionList:DrawingObjects(Object, config)
         Distance.BackgroundTransparency = 1
         Distance.Position = UDim2.new(0.00, 0.00, 0.50, 0.00)
         Distance.Parent = BillboardGui
-        Distance.Visible = (EspConfig.DistanceVisible ~= nil) and EspConfig.DistanceVisible or true
+        Distance.Visible = getVisibility(EspConfig.DistanceVisible)
         if EspConfig.HighlightMode or false then
             local Highlight = Instance.new("Highlight")
             Highlight.OutlineTransparency = 1
