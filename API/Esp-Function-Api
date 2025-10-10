@@ -107,6 +107,6 @@ game:GetService("RunService").Stepped:Connect(function()
     end
 end)
 
-print("[绘制]初始化成功")
+print("[绘制]初始化成功v0.0.1")
 
 return EspFunctionList
