@@ -22,15 +22,20 @@ function EspFunctionList:DrawingObjects(Object, config)
                 BillboardGui:FindFirstChild("Distance").TextColor3 = EspConfig.DistanceColor3 or Color3.new(0.80, 0.80, 0.80)
                 BillboardGui:FindFirstChild("Name").Visible = getVisibility(EspConfig.NameVisible)
                 BillboardGui:FindFirstChild("Distance").Visible = getVisibility(EspConfig.DistanceVisible)
+                BillboardGui:FindFirstChild("Name").TextTransparency = EspConfig.TextTransparency or 0
+                BillboardGui:FindFirstChild("Distance").TextTransparency = EspConfig.TextTransparency or 0
+                BillboardGui.StudsOffsetWorldSpace = EspConfig.StudsOffsetWorldSpace or Vector3.new(0.00, 0.00, 0.00)
                 if EspConfig.HighlightMode or false then
                     if BillboardGui:FindFirstChildOfClass("Highlight") then
                         BillboardGui:FindFirstChildOfClass("Highlight").FillColor = EspConfig.Color3 or Color3.new(1, 1, 1)
+                        BillboardGui:FindFirstChildOfClass("Highlight").FillTransparency = EspConfig.HighlightTransparency or 0.6
+                        BillboardGui:FindFirstChildOfClass("Highlight").Adornee = EspConfig.HighlightAdornee or Object
                     else
                         local Highlight = Instance.new("Highlight")
                         Highlight.OutlineTransparency = 1
-                        Highlight.Adornee = Object
+                        Highlight.Adornee = EspConfig.HighlightAdornee or Object
                         Highlight.FillColor = EspConfig.Color3 or Color3.new(1, 1, 1)
-                        Highlight.FillTransparency = 0.6
+                        Highlight.FillTransparency = EspConfig.HighlightTransparency or 0.6
                         Highlight.Parent = BillboardGui
                     end
                 else
@@ -52,6 +57,7 @@ function EspFunctionList:DrawingObjects(Object, config)
         BillboardGui.Adornee = Object
         BillboardGui.MaxDistance = math.huge
         BillboardGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+        BillboardGui.StudsOffsetWorldSpace = EspConfig.StudsOffsetWorldSpace or Vector3.new(0.00, 0.00, 0.00)
         BillboardGui.StudsOffset = EspConfig.StudsOffset or Vector3.new(0.00, 0.00, 0.00)
         BillboardGui.Parent = hui
         Name.Name = "Name"
@@ -63,6 +69,7 @@ function EspFunctionList:DrawingObjects(Object, config)
         Name.Text = EspConfig.CustomName or Object.Name or "nil"
         Name.TextColor3 = EspConfig.Color3 or Color3.new(1, 1, 1)
         Name.BackgroundTransparency = 1
+        Name.TextTransparency = EspConfig.TextTransparency or 0
         Name.Parent = BillboardGui
         Name.Visible = getVisibility(EspConfig.NameVisible)
         Distance.Name = "Distance"
@@ -72,6 +79,7 @@ function EspFunctionList:DrawingObjects(Object, config)
         Distance.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
         Distance.Size = UDim2.new(1.00, 0.00, 0.50, 0.00)
         Distance.Text = "[无数据]"
+        Distance.TextTransparency = EspConfig.TextTransparency or 0
         Distance.TextColor3 = EspConfig.DistanceColor3 or Color3.new(0.80, 0.80, 0.80)
         Distance.BackgroundTransparency = 1
         Distance.Position = UDim2.new(0.00, 0.00, 0.50, 0.00)
@@ -82,7 +90,7 @@ function EspFunctionList:DrawingObjects(Object, config)
             Highlight.OutlineTransparency = 1
             Highlight.Adornee = EspConfig.HighlightAdornee or Object
             Highlight.FillColor = EspConfig.Color3 or Color3.new(1, 1, 1)
-            Highlight.FillTransparency = 0.6
+            Highlight.FillTransparency = EspConfig.HighlightTransparency or 0.6
             Highlight.Parent = BillboardGui
         end
         return "创建绘制:"..BillboardGui.Name
@@ -150,12 +158,15 @@ print([[
     - BillboardGuiName: 自定义BillboardGui名称
     - HighlightAdornee: 自定义高亮显示对象 (Object)
     - StudsOffset: 偏移位置 (Vector3)
+    - StudsOffsetWorldSpace: 世界偏移位置 (Vector3)
     - Size: 显示大小 (UDim2)
     - Color3: 显示颜色 (Color3)
     - DistanceColor3: 距离显示颜色 (Color3)
     - HighlightMode: 高亮显示 (true/false)
     - NameVisible: 名称显示 (true/false)
     - DistanceVisible: 距离显示 (true/false)
+    - HighlightTransparency: 高亮透明度 (0-1)
+    - TextTransparency: 文字透明度 (0-1)
 ======================================
 • DestroyDrawing(BillboardGuiName) - 销毁指定名字的绘制
   参数: BillboardGuiName(BillboardGui名称)
