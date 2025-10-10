@@ -60,7 +60,7 @@ function EspFunctionList:DrawingObjects(Object, config)
         Distance.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
         Distance.Size = UDim2.new(1.00, 0.00, 0.50, 0.00)
         Distance.Text = "[无数据]"
-        Distance.TextColor3 = EspConfig.DistanceColor3 Color3.new(0.80, 0.80, 0.80)
+        Distance.TextColor3 = EspConfig.DistanceColor3 or Color3.new(0.80, 0.80, 0.80)
         Distance.BackgroundTransparency = 1
         Distance.Position = UDim2.new(0.00, 0.00, 0.50, 0.00)
         Distance.Parent = BillboardGui
