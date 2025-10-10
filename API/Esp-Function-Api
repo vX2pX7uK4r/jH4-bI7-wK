@@ -8,8 +8,12 @@ function EspFunctionList:DrawingObjects(Object, config)
             if BillboardGui.Adornee == Object then
                 BillboardGui:FindFirstChild("Name").Text = EspConfig.CustomName or "nil"
                 BillboardGui:FindFirstChild("Name").TextColor3 = EspConfig.Color3 or Color3.new(1, 1, 1)
-                BillboardGui.StudsOffset = EspConfig.StudsOffset or Vector3.new(0.00, 3.00, 0.00)
+                BillboardGui.StudsOffset = EspConfig.StudsOffset or Vector3.new(0.00, 0.00, 0.00)
                 BillboardGui.Size = EspConfig.Size or UDim2.new(0.00, 100.00, 0.00, 40.00)
+                BillboardGui.Name = EspConfig.BillboardGuiName or Object.Name
+                BillboardGui:FindFirstChild("Distance").TextColor3 = EspConfig.DistanceColor3 or Color3.new(0.80, 0.80, 0.80)
+                BillboardGui:FindFirstChild("Name").Visible = EspConfig.NameVisible or true
+                BillboardGui:FindFirstChild("Distance").Visible = EspConfig.DistanceVisible or true
                 if EspConfig.HighlightMode or false then
                     if BillboardGui:FindFirstChildOfClass("Highlight") then
                         BillboardGui:FindFirstChildOfClass("Highlight").FillColor = EspConfig.Color3 or Color3.new(1, 1, 1)
