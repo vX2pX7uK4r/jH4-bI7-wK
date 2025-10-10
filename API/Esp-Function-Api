@@ -6,7 +6,7 @@ function EspFunctionList:DrawingObjects(Object, config)
     if Object then
         if hui:FindFirstChild(EspConfig.BillboardGuiName or Object.Name) then
             local BillboardGui = hui:FindFirstChild(EspConfig.BillboardGuiName or Object.Name)
-            if BillboardGui.Adornee == Object then
+            if BillboardGui.Adornee.Parent == Object then
                 BillboardGui:FindFirstChild("Name").Text = EspConfig.CustomName or "nil"
                 BillboardGui:FindFirstChild("Name").TextColor3 = EspConfig.Color3 or Color3.new(1, 1, 1)
                 BillboardGui.StudsOffset = EspConfig.StudsOffset or Vector3.new(0.00, 3.00, 0.00)
