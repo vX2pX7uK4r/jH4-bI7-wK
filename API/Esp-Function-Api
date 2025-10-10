@@ -106,12 +106,14 @@ function EspFunctionList:DrawingObjects(Object, config)
     end
 end
 
-function EspFunctionList:DestroyDrawing(BillboardGuiName)
-    if BillboardGuiName then
+
+
+function EspFunctionList:DestroyDrawing(Object)
+    if Object then
         for _, BillboardGui in ipairs(hui:GetChildren()) do
-            if BillboardGui:IsA("BillboardGui") and BillboardGui.Name == BillboardGuiName then
+            if BillboardGui:IsA("BillboardGui") and BillboardGui.Adornee == Object then
                 BillboardGui:Destroy()
-                return "销毁绘制:"..BillboardGuiName
+                return "销毁绘制:"..BillboardGui
             end
         end
     end
@@ -179,8 +181,9 @@ print([[
     - HighlightTransparency: 高亮透明度 (0-1)
     - TextTransparency: 文字透明度 (0-1)
 ======================================
-• DestroyDrawing(BillboardGuiName) - 销毁指定名字的绘制
-  参数: BillboardGuiName(BillboardGui名称)
+• DestroyDrawing(Object) - 销毁指定对象的ESP绘制
+  参数: Object(目标对象)
+  return(返回字符串): 销毁结果
 ====================================== 
 • DestroyAllDrawing() - 销毁所有绘制
   return(返回字符串): 销毁数量
