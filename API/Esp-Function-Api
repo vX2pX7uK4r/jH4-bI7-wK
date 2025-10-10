@@ -14,22 +14,27 @@ function EspFunctionList:DrawingObjects(Object, config)
     if Object then
         for _, BillboardGui in ipairs(hui:GetChildren()) do
             if BillboardGui.Adornee == Object then
-                BillboardGui:FindFirstChild("Name").Text = EspConfig.CustomName or "nil"
-                BillboardGui:FindFirstChild("Name").TextColor3 = EspConfig.Color3 or Color3.new(1, 1, 1)
+                local NameTextLabel = BillboardGui:FindFirstChild("Name")
+                local DistanceTextLabel = BillboardGui:FindFirstChild("Distance")
+                NameTextLabel.Text = EspConfig.CustomName or "nil"
+                NameTextLabel.TextColor3 = EspConfig.Color3 or Color3.new(1, 1, 1)
+                NameTextLabel.Visible = getVisibility(EspConfig.NameVisible)
+                NameTextLabel.TextTransparency = EspConfig.TextTransparency or 0
+
+                DistanceTextLabel.TextColor3 = EspConfig.DistanceColor3 or Color3.new(1,1,1)
+                DistanceTextLabel.Visible = getVisibility(EspConfig.DistanceVisible)
+                DistanceTextLabel.TextTransparency = EspConfig.TextTransparency or 0
+
                 BillboardGui.StudsOffset = EspConfig.StudsOffset or Vector3.new(0.00, 0.00, 0.00)
                 BillboardGui.Size = EspConfig.Size or UDim2.new(0.00, 100.00, 0.00, 40.00)
                 BillboardGui.Name = EspConfig.BillboardGuiName or Object.Name
-                BillboardGui:FindFirstChild("Distance").TextColor3 = EspConfig.DistanceColor3 or Color3.new(0.80, 0.80, 0.80)
-                BillboardGui:FindFirstChild("Name").Visible = getVisibility(EspConfig.NameVisible)
-                BillboardGui:FindFirstChild("Distance").Visible = getVisibility(EspConfig.DistanceVisible)
-                BillboardGui:FindFirstChild("Name").TextTransparency = EspConfig.TextTransparency or 0
-                BillboardGui:FindFirstChild("Distance").TextTransparency = EspConfig.TextTransparency or 0
                 BillboardGui.StudsOffsetWorldSpace = EspConfig.StudsOffsetWorldSpace or Vector3.new(0.00, 0.00, 0.00)
                 if EspConfig.HighlightMode or false then
                     if BillboardGui:FindFirstChildOfClass("Highlight") then
-                        BillboardGui:FindFirstChildOfClass("Highlight").FillColor = EspConfig.Color3 or Color3.new(1, 1, 1)
-                        BillboardGui:FindFirstChildOfClass("Highlight").FillTransparency = EspConfig.HighlightTransparency or 0.6
-                        BillboardGui:FindFirstChildOfClass("Highlight").Adornee = EspConfig.HighlightAdornee or Object
+                        local Highlight = BillboardGui:FindFirstChildOfClass("Highlight")
+                        Highlight.FillColor = EspConfig.Color3 or Color3.new(1, 1, 1)
+                        Highlight.FillTransparency = EspConfig.HighlightTransparency or 0.6
+                        Highlight.Adornee = EspConfig.HighlightAdornee or Object
                     else
                         local Highlight = Instance.new("Highlight")
                         Highlight.OutlineTransparency = 1
@@ -40,7 +45,7 @@ function EspFunctionList:DrawingObjects(Object, config)
                     end
                 else
                     if BillboardGui:FindFirstChildOfClass("Highlight") then
-                        BillboardGui:FindFirstChildOfClass("Highlight"):Destroy()
+                        BillboardGui.Highlight:Destroy()
                     end
                 end
                 return "更新绘制:"..BillboardGui.Name
@@ -80,7 +85,7 @@ function EspFunctionList:DrawingObjects(Object, config)
         Distance.Size = UDim2.new(1.00, 0.00, 0.50, 0.00)
         Distance.Text = "[无数据]"
         Distance.TextTransparency = EspConfig.TextTransparency or 0
-        Distance.TextColor3 = EspConfig.DistanceColor3 or Color3.new(0.80, 0.80, 0.80)
+        Distance.TextColor3 = EspConfig.DistanceColor3 or Color3.new(1,1,1)
         Distance.BackgroundTransparency = 1
         Distance.Position = UDim2.new(0.00, 0.00, 0.50, 0.00)
         Distance.Parent = BillboardGui
@@ -119,9 +124,9 @@ function EspFunctionList:DestroyAllDrawing()
     return "销毁所有绘制,数量:"..count
 end
 
-function EspFunctionList:GetDrawingList()
+function EspFunctionList:GetDrawingList(showAdornee)
     local billboardGuis = {}
-    local adorneeCount = {}
+    local countTable = {}
     for _, child in ipairs(hui:GetChildren()) do
         if child:IsA("BillboardGui") then
             local adorneeName = child.Adornee and child.Adornee.Name or "无绑定对象"
@@ -129,20 +134,22 @@ function EspFunctionList:GetDrawingList()
                 Name = child.Name,
                 Adornee = adorneeName
             })
-            adorneeCount[adorneeName] = (adorneeCount[adorneeName] or 0) + 1
+            local key = showAdornee and adorneeName or child.Name
+            countTable[key] = (countTable[key] or 0) + 1
         end
     end
     local statusText = ""
-    for adorneeName, count in pairs(adorneeCount) do
+    for name, count in pairs(countTable) do
         if statusText ~= "" then
             statusText = statusText .. ", "
         end
-        statusText = statusText .. string.format("%s(%d)", adorneeName, count)
+        statusText = statusText .. string.format("%s(%d)", name, count)
     end
     if #billboardGuis == 0 then
         print("当前绘制数量: 0")
     else
-        print(string.format("当前绘制数量: %d | 绘制状态: %s", #billboardGuis, statusText))
+        local displayType = showAdornee and "绑定对象(Adornee)" or "绘制名称(Name)"
+        print(string.format("当前绘制数量: %d | %s状态: %s", #billboardGuis, displayType, statusText))
     end
     return billboardGuis
 end
@@ -182,14 +189,14 @@ print([[
 end
 
 game:GetService("RunService").Stepped:Connect(function()
-    if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        for _, BillboardGui in ipairs(hui:GetChildren()) do
-            if BillboardGui:IsA("BillboardGui") then
-                if BillboardGui.Adornee == nil or BillboardGui.Adornee.Parent == nil then
-                    BillboardGui:Destroy()
-                end
+    for _, BillboardGui in ipairs(hui:GetChildren()) do
+        if BillboardGui:IsA("BillboardGui") then
+            if game.Workspace:FindFirstChild(BillboardGui.Adornee.Parent.Name,true) == nil then
+                BillboardGui:Destroy()
             end
         end
+    end
+    if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
         for _, BillboardGui in ipairs(hui:GetChildren()) do
             if BillboardGui:IsA("BillboardGui") and BillboardGui.Adornee then
                 local DistanceLabel = BillboardGui:FindFirstChild("Distance")
@@ -202,7 +209,7 @@ game:GetService("RunService").Stepped:Connect(function()
     end
 end)
 
-print("[绘制(Beta)]初始化成功")
+print("[绘制(Beta)]Api初始化成功")
 print("使用Help()查看帮助")
 
 return EspFunctionList
