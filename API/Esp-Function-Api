@@ -4,9 +4,8 @@ local EspFunctionList = {}
 function EspFunctionList:DrawingObjects(Object, config)
     local EspConfig = config or {}
     if Object then
-        if hui:FindFirstChild(EspConfig.BillboardGuiName or Object.Name) then
-            local BillboardGui = hui:FindFirstChild(EspConfig.BillboardGuiName or Object.Name)
-            if BillboardGui.Adornee.Parent == Object then
+        for _, BillboardGui in ipairs(hui:GetChildren()) do
+            if BillboardGui.Adornee == Object then
                 BillboardGui:FindFirstChild("Name").Text = EspConfig.CustomName or "nil"
                 BillboardGui:FindFirstChild("Name").TextColor3 = EspConfig.Color3 or Color3.new(1, 1, 1)
                 BillboardGui.StudsOffset = EspConfig.StudsOffset or Vector3.new(0.00, 3.00, 0.00)
@@ -30,6 +29,7 @@ function EspFunctionList:DrawingObjects(Object, config)
                 return "更新绘制:"..BillboardGui.Name
             end
         end
+
         local BillboardGui = Instance.new("BillboardGui")
         local Name = Instance.new("TextLabel")
         local Distance = Instance.new("TextLabel")
