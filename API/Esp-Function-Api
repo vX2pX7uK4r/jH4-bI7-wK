@@ -214,9 +214,8 @@ game:GetService("RunService").Stepped:Connect(function()
 end)
 
 spawn(function()
-    while true do
-        wait(10)
-        print("清理")
+    while task.wait(10) do
+        print("正在清理无效绘制...")
         for _, BillboardGui in ipairs(hui:GetChildren()) do
             if BillboardGui:IsA("BillboardGui") then
                 if BillboardGui.Adornee then
@@ -233,6 +232,7 @@ spawn(function()
         end
     end
 end)
+
 
 print("[绘制(Beta)]Api初始化成功")
 print("使用Help()查看帮助")
