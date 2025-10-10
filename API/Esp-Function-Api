@@ -100,6 +100,17 @@ function EspFunctionList:DestroyDrawing(BillboardGuiName)
     end
 end
 
+function EspFunctionList:DestroyAllDrawing()
+    local count = 0
+    for _, BillboardGui in ipairs(hui:GetChildren()) do
+        if BillboardGui:IsA("BillboardGui") then
+            BillboardGui:Destroy()
+            count = count + 1
+        end
+    end
+    return "销毁所有绘制,数量:"..count
+end
+
 function EspFunctionList:GetDrawingList()
     local billboardGuis = {}
     local adorneeCount = {}
@@ -123,7 +134,7 @@ function EspFunctionList:GetDrawingList()
     if #billboardGuis == 0 then
         print("当前绘制数量: 0")
     else
-        print(string.format("当前绘制数量: %d | 绑定状态: %s", #billboardGuis, statusText))
+        print(string.format("当前绘制数量: %d | 绘制状态: %s", #billboardGuis, statusText))
     end
     return billboardGuis
 end
@@ -148,6 +159,9 @@ print([[
 ======================================
 • DestroyDrawing(BillboardGuiName) - 销毁指定名字的绘制
   参数: BillboardGuiName(BillboardGui名称)
+====================================== 
+• DestroyAllDrawing() - 销毁所有绘制
+  return(返回字符串): 销毁数量
 ====================================== 
 • GetDrawingList() - 获取当前所有绘制列表
   return(返回Tabel): 包含所有绘制名称和绑定对象名称的表
