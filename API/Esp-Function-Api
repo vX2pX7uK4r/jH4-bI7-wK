@@ -64,6 +64,7 @@ function EspFunctionList:DrawingObjects(Object, config)
         Distance.BackgroundTransparency = 1
         Distance.Position = UDim2.new(0.00, 0.00, 0.50, 0.00)
         Distance.Parent = BillboardGui
+        Distance.Visible = EspConfig.DistanceVisible or true
         if EspConfig.HighlightMode or false then
             local Highlight = Instance.new("Highlight")
             Highlight.OutlineTransparency = 1
@@ -100,6 +101,7 @@ print([[
     - DistanceColor3: 距离显示颜色 (Color3)
     - HighlightMode: 高亮显示 (true/false)
     - NameVisible: 名称显示 (true/false)
+    - DistanceVisible: 距离显示 (true/false)
 ======================================
 • DestroyDrawing(BillboardGuiName) - 销毁指定名字的绘制
   参数: BillboardGuiName(BillboardGui名称)
