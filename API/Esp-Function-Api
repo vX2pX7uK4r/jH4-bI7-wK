@@ -68,7 +68,7 @@ function EspFunctionList:DrawingObjects(Object, config)
         if EspConfig.HighlightMode or false then
             local Highlight = Instance.new("Highlight")
             Highlight.OutlineTransparency = 1
-            Highlight.Adornee = Object
+            Highlight.Adornee = EspConfig.HighlightAdornee or Object
             Highlight.FillColor = EspConfig.Color3 or Color3.new(1, 1, 1)
             Highlight.FillTransparency = 0.6
             Highlight.Parent = BillboardGui
@@ -95,6 +95,7 @@ print([[
   配置选项:
     - CustomName: 自定义显示名称
     - BillboardGuiName: 自定义BillboardGui名称
+    - HighlightAdornee: 自定义高亮显示对象 (Object)
     - StudsOffset: 偏移位置 (Vector3)
     - Size: 显示大小 (UDim2)
     - Color3: 显示颜色 (Color3)
