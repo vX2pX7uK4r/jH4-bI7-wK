@@ -186,7 +186,7 @@ print([[
   return(返回字符串): 销毁数量
 ====================================== 
 • GetDrawingList(showAdornee) - 获取当前所有绘制列表
-  参数: showAdornee(显示绑定对象名称, true/false, 默认false)
+  参数: showAdornee 显示绑定对象名称 (true/false)
   return(返回Tabel): 包含所有绘制名称和绑定对象名称的表
 ======================================
 • Help() - 显示此帮助信息
