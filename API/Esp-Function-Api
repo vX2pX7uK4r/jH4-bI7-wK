@@ -73,6 +73,7 @@ function EspFunctionList:DrawingObjects(Object, config)
             Highlight.FillTransparency = 0.6
             Highlight.Parent = BillboardGui
         end
+        return "创建绘制:"..BillboardGui.Name
     end
 end
 
@@ -81,9 +82,38 @@ function EspFunctionList:DestroyDrawing(BillboardGuiName)
         for _, BillboardGui in ipairs(hui:GetChildren()) do
             if BillboardGui.Name == BillboardGuiName then
                 BillboardGui:Destroy()
+                return "销毁绘制:"..BillboardGuiName
             end
         end
     end
+end
+
+function EspFunctionList:GetDrawingList()
+    local billboardGuis = {}
+    local adorneeCount = {}
+    for _, child in ipairs(hui:GetChildren()) do
+        if child:IsA("BillboardGui") then
+            local adorneeName = child.Adornee and child.Adornee.Name or "无绑定对象"
+            table.insert(billboardGuis, {
+                Name = child.Name,
+                Adornee = adorneeName
+            })
+            adorneeCount[adorneeName] = (adorneeCount[adorneeName] or 0) + 1
+        end
+    end
+    local statusText = ""
+    for adorneeName, count in pairs(adorneeCount) do
+        if statusText ~= "" then
+            statusText = statusText .. ", "
+        end
+        statusText = statusText .. string.format("%s(%d)", adorneeName, count)
+    end
+    if #billboardGuis == 0 then
+        print("当前绘制数量: 0")
+    else
+        print(string.format("当前绘制数量: %d | 绑定状态: %s", #billboardGuis, statusText))
+    end
+    return billboardGuis
 end
 
 function EspFunctionList:Help()
@@ -106,6 +136,9 @@ print([[
 ======================================
 • DestroyDrawing(BillboardGuiName) - 销毁指定名字的绘制
   参数: BillboardGuiName(BillboardGui名称)
+====================================== 
+• GetDrawingList() - 获取当前所有绘制列表
+  return(返回Tabel): 包含所有绘制名称和绑定对象名称的表
 ======================================
 • Help() - 显示此帮助信息
 ]])
