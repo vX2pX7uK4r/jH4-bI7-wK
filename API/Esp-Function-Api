@@ -40,7 +40,7 @@ function EspFunctionList:DrawingObjects(Object, config)
         BillboardGui.Adornee = Object
         BillboardGui.MaxDistance = math.huge
         BillboardGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-        BillboardGui.StudsOffset = EspConfig.StudsOffset or Vector3.new(0.00, 3.00, 0.00)
+        BillboardGui.StudsOffset = EspConfig.StudsOffset or Vector3.new(0.00, 0.00, 0.00)
         BillboardGui.Parent = hui
         Name.Name = "Name"
         Name.TextWrapped = true
@@ -52,6 +52,7 @@ function EspFunctionList:DrawingObjects(Object, config)
         Name.TextColor3 = EspConfig.Color3 or Color3.new(1, 1, 1)
         Name.BackgroundTransparency = 1
         Name.Parent = BillboardGui
+        Name.Visible = EspConfig.NameVisible or true
         Distance.Name = "Distance"
         Distance.TextWrapped = true
         Distance.TextStrokeTransparency = 0.4000000059604645
@@ -59,13 +60,10 @@ function EspFunctionList:DrawingObjects(Object, config)
         Distance.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
         Distance.Size = UDim2.new(1.00, 0.00, 0.50, 0.00)
         Distance.Text = "[无数据]"
-        Distance.TextColor3 = Color3.new(0.80, 0.80, 0.80)
+        Distance.TextColor3 = EspConfig.DistanceColor3 Color3.new(0.80, 0.80, 0.80)
         Distance.BackgroundTransparency = 1
         Distance.Position = UDim2.new(0.00, 0.00, 0.50, 0.00)
         Distance.Parent = BillboardGui
-        if not EspConfig.CustomName or #EspConfig.CustomName == 0 then
-            Name.Visible = false
-        end
         if EspConfig.HighlightMode or false then
             local Highlight = Instance.new("Highlight")
             Highlight.OutlineTransparency = 1
@@ -95,11 +93,13 @@ print([[
   参数: Object(目标对象), config(配置表)
   配置选项:
     - CustomName: 自定义显示名称
-    - Color3: 显示颜色 (Color3)
+    - BillboardGuiName: 自定义BillboardGui名称
     - StudsOffset: 偏移位置 (Vector3)
     - Size: 显示大小 (UDim2)
-    - HighlightMode: 是否启用高亮显示
-    - BillboardGuiName: 自定义BillboardGui名称
+    - Color3: 显示颜色 (Color3)
+    - DistanceColor3: 距离显示颜色 (Color3)
+    - HighlightMode: 高亮显示 (true/false)
+    - NameVisible: 名称显示 (true/false)
 ======================================
 • DestroyDrawing(BillboardGuiName) - 销毁指定名字的绘制
   参数: BillboardGuiName(BillboardGui名称)
@@ -130,6 +130,6 @@ game:GetService("RunService").Stepped:Connect(function()
 end)
 
 print("[绘制(Beta)]初始化成功")
-print("使用Help()查看帮助")
+print("使用EspFunctionList:Help()查看帮助")
 
 return EspFunctionList
