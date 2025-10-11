@@ -30,15 +30,15 @@ function EspFunctionList:DrawingObjects(Object, config)
     end
     local existingBillboard = hui:FindFirstChild(billboardName)
     if existingBillboard and existingBillboard:IsA("BillboardGui") and existingBillboard.Adornee == Object then
-        local nameTextLabel = existingBillboard.Name
-        local distanceTextLabel = existingBillboard.Distance
-        if nameTextLabel then
+        local nameTextLabel = existingBillboard:FindFirstChild("Name")
+        local distanceTextLabel = existingBillboard:FindFirstChild("Distance")
+        if nameTextLabel and nameTextLabel:IsA("TextLabel") then
             nameTextLabel.Text = customName
             nameTextLabel.TextColor3 = color3
             nameTextLabel.Visible = nameVisible
             nameTextLabel.TextTransparency = textTransparency
         end
-        if distanceTextLabel then
+        if distanceTextLabel and distanceTextLabel:IsA("TextLabel") then
             distanceTextLabel.TextColor3 = distanceColor3
             distanceTextLabel.Visible = distanceVisible
             distanceTextLabel.TextTransparency = textTransparency
