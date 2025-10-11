@@ -13,6 +13,7 @@ function EspFunctionList:DrawingObjects(Object, config)
     if not Object then return end
     local EspConfig = config or {}
     local color3 = EspConfig.Color3 or Color3.new(1, 1, 1)
+    local billboardGuiAdornee = EspConfig.BillboardGuiAdornee
     local distanceColor3 = EspConfig.DistanceColor3 or Color3.new(1, 1, 1)
     local textTransparency = EspConfig.TextTransparency or 0
     local highlightTransparency = EspConfig.HighlightTransparency or 0.6
@@ -23,54 +24,35 @@ function EspFunctionList:DrawingObjects(Object, config)
     local customName = EspConfig.CustomName or Object.Name or "nil"
     local nameVisible = getVisibility(EspConfig.NameVisible)
     local distanceVisible = getVisibility(EspConfig.DistanceVisible)
-    local billboardGuiAdornee = EspConfig.BillboardGuiAdornee
     local targetBillboardAdornee = Object
-    if billboardGuiAdornee then
-        if type(billboardGuiAdornee) == "string" then
-            local success, result = pcall(function()
-                return Object:FindFirstChild(billboardGuiAdornee)
-            end)
-            if success and result then
-                targetBillboardAdornee = result
-            end
-        end
+    if type(billboardGuiAdornee) == "string" then
+        targetBillboardAdornee = Object:FindFirstChild(billboardGuiAdornee) or Object
     end
-    local existingBillboard
-    for _, child in ipairs(hui:GetChildren()) do
-        if child:IsA("BillboardGui") and child.Adornee == Object then
-            existingBillboard = child
-            break
-        end
-    end
-    if existingBillboard then
-        local nameTextLabel = existingBillboard:FindFirstChild("Name")
-        local distanceTextLabel = existingBillboard:FindFirstChild("Distance")
-        if nameTextLabel and nameTextLabel:IsA("TextLabel") then
+    local existingBillboard = hui:FindFirstChild(billboardName)
+    if existingBillboard and existingBillboard:IsA("BillboardGui") and existingBillboard.Adornee == Object then
+        local nameTextLabel = existingBillboard.Name
+        local distanceTextLabel = existingBillboard.Distance
+        if nameTextLabel then
             nameTextLabel.Text = customName
             nameTextLabel.TextColor3 = color3
             nameTextLabel.Visible = nameVisible
             nameTextLabel.TextTransparency = textTransparency
         end
-        if distanceTextLabel and distanceTextLabel:IsA("TextLabel") then
+        if distanceTextLabel then
             distanceTextLabel.TextColor3 = distanceColor3
             distanceTextLabel.Visible = distanceVisible
             distanceTextLabel.TextTransparency = textTransparency
         end
         existingBillboard.StudsOffset = studsOffset
         existingBillboard.Size = size
-        existingBillboard.Name = billboardName
         existingBillboard.StudsOffsetWorldSpace = studsOffsetWorldSpace
         existingBillboard.Adornee = targetBillboardAdornee
-        local existingHighlight = existingBillboard:FindFirstChildOfClass("Highlight")
-        if EspConfig.HighlightAdornee then
+        local existingHighlight = existingBillboard:FindFirstChildWhichIsA("Highlight")
+        local highlightAdornee = EspConfig.HighlightAdornee
+        if highlightAdornee then
             local targetAdornee = Object
-            if type(EspConfig.HighlightAdornee) == "string" then
-                local success, result = pcall(function()
-                    return Object:FindFirstChild(EspConfig.HighlightAdornee)
-                end)
-                if success and result then
-                    targetAdornee = result
-                end
+            if type(highlightAdornee) == "string" then
+                targetAdornee = Object:FindFirstChild(highlightAdornee) or Object
             end
             if existingHighlight then
                 existingHighlight.FillColor = color3
@@ -84,16 +66,12 @@ function EspFunctionList:DrawingObjects(Object, config)
                 highlight.FillTransparency = highlightTransparency
                 highlight.Parent = existingBillboard
             end
-        else
-            if existingHighlight then
-                existingHighlight:Destroy()
-            end
+        elseif existingHighlight then
+            existingHighlight:Destroy()
         end
         return "更新绘制:" .. existingBillboard.Name
     else
         local billboardGui = Instance.new("BillboardGui")
-        local nameLabel = Instance.new("TextLabel")
-        local distanceLabel = Instance.new("TextLabel")
         billboardGui.AlwaysOnTop = true
         billboardGui.Name = billboardName
         billboardGui.Size = size
@@ -104,11 +82,13 @@ function EspFunctionList:DrawingObjects(Object, config)
         billboardGui.StudsOffsetWorldSpace = studsOffsetWorldSpace
         billboardGui.StudsOffset = studsOffset
         billboardGui.Parent = hui
+        local font = Font.new("rbxasset://fonts/families/SourceSansPro.json")
+        local nameLabel = Instance.new("TextLabel")
         nameLabel.Name = "Name"
-        nameLabel.TextWrapped = true
+        nameLabel.TextWrapped = false
         nameLabel.TextStrokeTransparency = 0
         nameLabel.TextScaled = true
-        nameLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json")
+        nameLabel.FontFace = font
         nameLabel.Size = UDim2.new(1, 0, 0.5, 0)
         nameLabel.Text = customName
         nameLabel.TextColor3 = color3
@@ -116,11 +96,12 @@ function EspFunctionList:DrawingObjects(Object, config)
         nameLabel.TextTransparency = textTransparency
         nameLabel.Visible = nameVisible
         nameLabel.Parent = billboardGui
+        local distanceLabel = Instance.new("TextLabel")
         distanceLabel.Name = "Distance"
-        distanceLabel.TextWrapped = true
+        distanceLabel.TextWrapped = false
         distanceLabel.TextStrokeTransparency = 0.4
         distanceLabel.TextScaled = true
-        distanceLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json")
+        distanceLabel.FontFace = font
         distanceLabel.Size = UDim2.new(1, 0, 0.5, 0)
         distanceLabel.Text = "[无数据]"
         distanceLabel.TextTransparency = textTransparency
@@ -129,15 +110,11 @@ function EspFunctionList:DrawingObjects(Object, config)
         distanceLabel.Position = UDim2.new(0, 0, 0.5, 0)
         distanceLabel.Visible = distanceVisible
         distanceLabel.Parent = billboardGui
-        if EspConfig.HighlightAdornee then
+        local highlightAdornee = EspConfig.HighlightAdornee
+        if highlightAdornee then
             local targetAdornee = Object
-            if type(EspConfig.HighlightAdornee) == "string" then
-                local success, result = pcall(function()
-                    return Object:FindFirstChild(EspConfig.HighlightAdornee)
-                end)
-                if success and result then
-                    targetAdornee = result
-                end
+            if type(highlightAdornee) == "string" then
+                targetAdornee = Object:FindFirstChild(highlightAdornee) or Object
             end
             local highlight = Instance.new("Highlight")
             highlight.OutlineTransparency = 1
@@ -355,3 +332,20 @@ print("[绘制(Beta)]Api初始化成功,使用Help()查看帮助")
 
 return EspFunctionList
 
+
+--[[
+{
+    CustomName = nil,
+    BillboardGuiName = nil,
+    BillboardGuiAdornee = nil,
+    HighlightAdornee = nil,
+    StudsOffset = Vector3.new(0, 3, 0),
+    Size = UDim2.new(0, 100, 0, 40),
+    Color3 = Color3.new(0, 1, 0),
+    DistanceColor3 = Color3.new(1, 1, 0),
+    NameVisible = true,
+    DistanceVisible = true,
+    HighlightTransparency = nil,
+    TextTransparency = nil,
+}
+]]
