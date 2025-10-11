@@ -52,6 +52,7 @@ function EspFunctionList:DrawingObjects(Object, config)
             distanceTextLabel.TextTransparency = textTransparency
         end
         existingBillboard.Name = billboardName
+        existingBillboard.MaxDistance = EspConfig.MaxDistance or math.huge
         existingBillboard.StudsOffset = studsOffset
         existingBillboard.Size = size
         existingBillboard.StudsOffsetWorldSpace = studsOffsetWorldSpace
@@ -88,7 +89,7 @@ function EspFunctionList:DrawingObjects(Object, config)
         billboardGui.Size = size
         billboardGui.ClipsDescendants = true
         billboardGui.Adornee = searchAdornee
-        billboardGui.MaxDistance = math.huge
+        billboardGui.MaxDistance = EspConfig.MaxDistance or math.huge
         billboardGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
         billboardGui.StudsOffsetWorldSpace = studsOffsetWorldSpace
         billboardGui.StudsOffset = studsOffset
@@ -272,6 +273,7 @@ print([[
     - DistanceColor3: 距离显示颜色 (Color3)
     - NameVisible: 名称显示 (true/false)
     - DistanceVisible: 距离显示 (true/false)
+    - MaxDistance: 最大显示距离 (数字)(默认无限远)
     - HighlightTransparency: 高亮透明度 (0-1)
     - TextTransparency: 文字透明度 (0-1)
 ======================================
