@@ -1,6 +1,6 @@
 local hui = gethui()
 local EspFunctionList = {}
-
+local CustomConfigurationTable = {}
 local function getVisibility(configValue)
     if configValue == nil then
         return true
@@ -171,6 +171,21 @@ function EspFunctionList:GetDrawingList(showAdornee, shouldPrint)
     return billboardGuis
 end
 
+function EspFunctionList:AddConfiguration(Name, config)
+    if type(config) ~= "table" then
+        return "config不是表"
+    end
+    CustomConfigurationTable[Name] = config
+    return "添加名为:"..Name.."的配置".."\n配置内容:"..game:GetService("HttpService"):JSONEncode(config)
+end
+
+function EspFunctionList:GetConfiguration(Name)
+    if CustomConfigurationTable[Name] == nil then
+        return "未找到名为:"..Name.."的配置"
+    end
+    return CustomConfigurationTable[Name]
+end
+
 function EspFunctionList:Help()
 print([[
 (Beta)
@@ -202,6 +217,14 @@ print([[
 • GetDrawingList(showAdornee, shouldPrint) - 获取当前所有绘制列表
   参数: showAdornee(显示绑定对象名称 true/false 默认false), shouldPrint(是否打印设置 true/false 默认false)
   return(返回表): 包含所有绘制信息的表格
+======================================
+• AddConfiguration(Name, config) - 添加自定义配置
+  参数: Name(配置名称), config(配置表)
+  return(返回字符串): 添加状态
+======================================
+• GetConfiguration(Name) - 获取自定义配置
+  参数: Name(配置名称)
+  return(返回表/字符串): 配置表/未找到状态
 ======================================
 • Help() - 显示此帮助信息
 ]])
