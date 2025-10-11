@@ -10,7 +10,7 @@ local function getVisibility(configValue)
 end
 
 function EspFunctionList:DrawingObjects(Object, config)
-    if not Object then return end
+    if not Object then return "对象为空" end
     local EspConfig = config or {}
     local color3 = EspConfig.Color3 or Color3.new(1, 1, 1)
     local billboardGuiAdornee = EspConfig.BillboardGuiAdornee
@@ -24,12 +24,20 @@ function EspFunctionList:DrawingObjects(Object, config)
     local customName = EspConfig.CustomName or Object.Name or "nil"
     local nameVisible = getVisibility(EspConfig.NameVisible)
     local distanceVisible = getVisibility(EspConfig.DistanceVisible)
-    local targetBillboardAdornee = Object
-    if type(billboardGuiAdornee) == "string" then
-        targetBillboardAdornee = Object:FindFirstChild(billboardGuiAdornee) or Object
+    local searchAdornee = Object
+    if billboardGuiAdornee then
+        if type(billboardGuiAdornee) == "string" then
+            searchAdornee = Object:FindFirstChild(billboardGuiAdornee) or Object
+        end
     end
-    local existingBillboard = hui:FindFirstChild(billboardName)
-    if existingBillboard and existingBillboard:IsA("BillboardGui") and existingBillboard.Adornee == Object then
+    local existingBillboard = nil
+    for _, child in ipairs(hui:GetChildren()) do
+        if child:IsA("BillboardGui") and child.Adornee == searchAdornee then
+            existingBillboard = child
+            break
+        end
+    end
+    if existingBillboard and existingBillboard:IsA("BillboardGui") then
         local nameTextLabel = existingBillboard:FindFirstChild("Name")
         local distanceTextLabel = existingBillboard:FindFirstChild("Distance")
         if nameTextLabel and nameTextLabel:IsA("TextLabel") then
@@ -43,10 +51,11 @@ function EspFunctionList:DrawingObjects(Object, config)
             distanceTextLabel.Visible = distanceVisible
             distanceTextLabel.TextTransparency = textTransparency
         end
+        existingBillboard.Name = billboardName
         existingBillboard.StudsOffset = studsOffset
         existingBillboard.Size = size
         existingBillboard.StudsOffsetWorldSpace = studsOffsetWorldSpace
-        existingBillboard.Adornee = targetBillboardAdornee
+        existingBillboard.Adornee = searchAdornee
         local existingHighlight = existingBillboard:FindFirstChildWhichIsA("Highlight")
         local highlightAdornee = EspConfig.HighlightAdornee
         if highlightAdornee then
@@ -66,7 +75,7 @@ function EspFunctionList:DrawingObjects(Object, config)
                 highlight.FillTransparency = highlightTransparency
                 highlight.Parent = existingBillboard
             end
-        elseif existingHighlight then
+        else
             existingHighlight:Destroy()
         end
         return "更新绘制:" .. existingBillboard.Name
@@ -76,7 +85,7 @@ function EspFunctionList:DrawingObjects(Object, config)
         billboardGui.Name = billboardName
         billboardGui.Size = size
         billboardGui.ClipsDescendants = true
-        billboardGui.Adornee = targetBillboardAdornee
+        billboardGui.Adornee = searchAdornee
         billboardGui.MaxDistance = math.huge
         billboardGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
         billboardGui.StudsOffsetWorldSpace = studsOffsetWorldSpace
