@@ -76,7 +76,9 @@ function EspFunctionList:DrawingObjects(Object, config)
                 highlight.Parent = existingBillboard
             end
         else
-            existingHighlight:Destroy()
+            if existingHighlight then
+                existingHighlight:Destroy()
+            end
         end
         return "更新绘制:" .. existingBillboard.Name
     else
