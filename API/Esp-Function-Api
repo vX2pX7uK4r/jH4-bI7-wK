@@ -10,103 +10,129 @@ local function getVisibility(configValue)
 end
 
 function EspFunctionList:DrawingObjects(Object, config)
+    if not Object then return end
     local EspConfig = config or {}
-    if Object then
-        for _, BillboardGui in ipairs(hui:GetChildren()) do
-            if BillboardGui:IsA("BillboardGui") and BillboardGui.Adornee == Object then
-                local NameTextLabel = BillboardGui:FindFirstChild("Name")
-                local DistanceTextLabel = BillboardGui:FindFirstChild("Distance")
-                if NameTextLabel then
-                    NameTextLabel.Text = EspConfig.CustomName or Object.Name or "nil"
-                    NameTextLabel.TextColor3 = EspConfig.Color3 or Color3.new(1, 1, 1)
-                    NameTextLabel.Visible = getVisibility(EspConfig.NameVisible)
-                    NameTextLabel.TextTransparency = EspConfig.TextTransparency or 0
-                end
-                if DistanceTextLabel then
-                    DistanceTextLabel.TextColor3 = EspConfig.DistanceColor3 or Color3.new(1,1,1)
-                    DistanceTextLabel.Visible = getVisibility(EspConfig.DistanceVisible)
-                    DistanceTextLabel.TextTransparency = EspConfig.TextTransparency or 0
-                end
-
-                BillboardGui.StudsOffset = EspConfig.StudsOffset or Vector3.new(0.00, 0.00, 0.00)
-                BillboardGui.Size = EspConfig.Size or UDim2.new(0.00, 100.00, 0.00, 40.00)
-                BillboardGui.Name = EspConfig.BillboardGuiName or Object.Name
-                BillboardGui.StudsOffsetWorldSpace = EspConfig.StudsOffsetWorldSpace or Vector3.new(0.00, 0.00, 0.00)
-
-                if EspConfig.HighlightAdornee then
-                    if BillboardGui:FindFirstChildOfClass("Highlight") then
-                        local Highlight = BillboardGui:FindFirstChildOfClass("Highlight")
-                        Highlight.FillColor = EspConfig.Color3 or Color3.new(1, 1, 1)
-                        Highlight.FillTransparency = EspConfig.HighlightTransparency or 0.6
-                        Highlight.Adornee = Object.EspConfig.HighlightAdornee or EspConfig.HighlightAdornee or Object
-                    else
-                        local Highlight = Instance.new("Highlight")
-                        Highlight.OutlineTransparency = 1
-                        Highlight.Adornee = Object.EspConfig.HighlightAdornee or EspConfig.HighlightAdornee or Object
-                        Highlight.FillColor = EspConfig.Color3 or Color3.new(1, 1, 1)
-                        Highlight.FillTransparency = EspConfig.HighlightTransparency or 0.6
-                        Highlight.Parent = BillboardGui
-                    end
-                else
-                    local existingHighlight = BillboardGui:FindFirstChildOfClass("Highlight")
-                    if existingHighlight then
-                        existingHighlight:Destroy()
-                    end
-                end
-                return "更新绘制:"..BillboardGui.Name
-            end
+    local color3 = EspConfig.Color3 or Color3.new(1, 1, 1)
+    local distanceColor3 = EspConfig.DistanceColor3 or Color3.new(1, 1, 1)
+    local textTransparency = EspConfig.TextTransparency or 0
+    local highlightTransparency = EspConfig.HighlightTransparency or 0.6
+    local studsOffset = EspConfig.StudsOffset or Vector3.new(0, 0, 0)
+    local studsOffsetWorldSpace = EspConfig.StudsOffsetWorldSpace or Vector3.new(0, 0, 0)
+    local size = EspConfig.Size or UDim2.new(0, 100, 0, 40)
+    local billboardName = EspConfig.BillboardGuiName or Object.Name
+    local customName = EspConfig.CustomName or Object.Name or "nil"
+    local nameVisible = getVisibility(EspConfig.NameVisible)
+    local distanceVisible = getVisibility(EspConfig.DistanceVisible)
+    local existingBillboard
+    for _, child in ipairs(hui:GetChildren()) do
+        if child:IsA("BillboardGui") and child.Adornee == Object then
+            existingBillboard = child
+            break
         end
-
-        local BillboardGui = Instance.new("BillboardGui")
-        local Name = Instance.new("TextLabel")
-        local Distance = Instance.new("TextLabel")
-        BillboardGui.AlwaysOnTop = true
-        BillboardGui.Name = EspConfig.BillboardGuiName or Object.Name
-        BillboardGui.Size = EspConfig.Size or UDim2.new(0.00, 100.00, 0.00, 40.00)
-        BillboardGui.ClipsDescendants = true
-        BillboardGui.Adornee = Object
-        BillboardGui.MaxDistance = math.huge
-        BillboardGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-        BillboardGui.StudsOffsetWorldSpace = EspConfig.StudsOffsetWorldSpace or Vector3.new(0.00, 0.00, 0.00)
-        BillboardGui.StudsOffset = EspConfig.StudsOffset or Vector3.new(0.00, 0.00, 0.00)
-        BillboardGui.Parent = hui
-        Name.Name = "Name"
-        Name.TextWrapped = true
-        Name.TextStrokeTransparency = 0
-        Name.TextScaled = true
-        Name.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-        Name.Size = UDim2.new(1.00, 0.00, 0.50, 0.00)
-        Name.Text = EspConfig.CustomName or Object.Name or "nil"
-        Name.TextColor3 = EspConfig.Color3 or Color3.new(1, 1, 1)
-        Name.BackgroundTransparency = 1
-        Name.TextTransparency = EspConfig.TextTransparency or 0
-        Name.Parent = BillboardGui
-        Name.Visible = getVisibility(EspConfig.NameVisible)
-        Distance.Name = "Distance"
-        Distance.TextWrapped = true
-        Distance.TextStrokeTransparency = 0.4000000059604645
-        Distance.TextScaled = true
-        Distance.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-        Distance.Size = UDim2.new(1.00, 0.00, 0.50, 0.00)
-        Distance.Text = "[无数据]"
-        Distance.TextTransparency = EspConfig.TextTransparency or 0
-        Distance.TextColor3 = EspConfig.DistanceColor3 or Color3.new(1,1,1)
-        Distance.BackgroundTransparency = 1
-        Distance.Position = UDim2.new(0.00, 0.00, 0.50, 0.00)
-        Distance.Parent = BillboardGui
-        Distance.Visible = getVisibility(EspConfig.DistanceVisible)
+    end
+    if existingBillboard then
+        local nameLabel = existingBillboard.Name
+        local distanceLabel = existingBillboard.Distance
+        if nameLabel then
+            nameLabel.Text = customName
+            nameLabel.TextColor3 = color3
+            nameLabel.Visible = nameVisible
+            nameLabel.TextTransparency = textTransparency
+        end
+        if distanceLabel then
+            distanceLabel.TextColor3 = distanceColor3
+            distanceLabel.Visible = distanceVisible
+            distanceLabel.TextTransparency = textTransparency
+        end
+        existingBillboard.StudsOffset = studsOffset
+        existingBillboard.Size = size
+        existingBillboard.Name = billboardName
+        existingBillboard.StudsOffsetWorldSpace = studsOffsetWorldSpace
+        local existingHighlight = existingBillboard:FindFirstChildOfClass("Highlight")
         if EspConfig.HighlightAdornee then
-            local Highlight = Instance.new("Highlight")
-            Highlight.OutlineTransparency = 1
-            Highlight.Adornee = Object.EspConfig.HighlightAdornee or EspConfig.HighlightAdornee or Object
-            Highlight.FillColor = EspConfig.Color3 or Color3.new(1, 1, 1)
-            Highlight.FillTransparency = EspConfig.HighlightTransparency or 0.6
-            Highlight.Parent = BillboardGui
+            local targetAdornee = Object
+            local success, result = pcall(function()
+                return Object:FindFirstChild(EspConfig.HighlightAdornee)
+            end)
+
+            if success and result then
+                targetAdornee = result
+            end
+
+            if existingHighlight then
+                existingHighlight.FillColor = color3
+                existingHighlight.FillTransparency = highlightTransparency
+                existingHighlight.Adornee = targetAdornee
+            else
+                local highlight = Instance.new("Highlight")
+                highlight.OutlineTransparency = 1
+                highlight.Adornee = targetAdornee
+                highlight.FillColor = color3
+                highlight.FillTransparency = highlightTransparency
+                highlight.Parent = existingBillboard
+            end
+        elseif existingHighlight then
+            existingHighlight:Destroy()
         end
-        return "创建绘制:"..BillboardGui.Name
+
+        return "更新绘制:" .. existingBillboard.Name
+    else
+        local billboardGui = Instance.new("BillboardGui")
+        local nameLabel = Instance.new("TextLabel")
+        local distanceLabel = Instance.new("TextLabel")
+        billboardGui.AlwaysOnTop = true
+        billboardGui.Name = billboardName
+        billboardGui.Size = size
+        billboardGui.ClipsDescendants = true
+        billboardGui.Adornee = Object
+        billboardGui.MaxDistance = math.huge
+        billboardGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+        billboardGui.StudsOffsetWorldSpace = studsOffsetWorldSpace
+        billboardGui.StudsOffset = studsOffset
+        billboardGui.Parent = hui
+        nameLabel.Name = "Name"
+        nameLabel.TextWrapped = true
+        nameLabel.TextStrokeTransparency = 0
+        nameLabel.TextScaled = true
+        nameLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json")
+        nameLabel.Size = UDim2.new(1, 0, 0.5, 0)
+        nameLabel.Text = customName
+        nameLabel.TextColor3 = color3
+        nameLabel.BackgroundTransparency = 1
+        nameLabel.TextTransparency = textTransparency
+        nameLabel.Visible = nameVisible
+        nameLabel.Parent = billboardGui
+        distanceLabel.Name = "Distance"
+        distanceLabel.TextWrapped = true
+        distanceLabel.TextStrokeTransparency = 0.4
+        distanceLabel.TextScaled = true
+        distanceLabel.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json")
+        distanceLabel.Size = UDim2.new(1, 0, 0.5, 0)
+        distanceLabel.Text = "[无数据]"
+        distanceLabel.TextTransparency = textTransparency
+        distanceLabel.TextColor3 = distanceColor3
+        distanceLabel.BackgroundTransparency = 1
+        distanceLabel.Position = UDim2.new(0, 0, 0.5, 0)
+        distanceLabel.Visible = distanceVisible
+        distanceLabel.Parent = billboardGui
+        if EspConfig.HighlightAdornee then
+            local targetAdornee = Object
+            local success, result = pcall(function()
+                return Object:FindFirstChild(EspConfig.HighlightAdornee)
+            end)
+            if success and result then
+                targetAdornee = result
+            end
+            local highlight = Instance.new("Highlight")
+            highlight.OutlineTransparency = 1
+            highlight.Adornee = targetAdornee
+            highlight.FillColor = color3
+            highlight.FillTransparency = highlightTransparency
+            highlight.Parent = billboardGui
+        end
+        return "创建绘制:" .. billboardGui.Name
     end
 end
-
 
 
 function EspFunctionList:DestroyDrawing(Object,Mode)
