@@ -38,11 +38,11 @@ function EspFunctionList:DrawingObjects(Object, config)
                         local Highlight = BillboardGui:FindFirstChildOfClass("Highlight")
                         Highlight.FillColor = EspConfig.Color3 or Color3.new(1, 1, 1)
                         Highlight.FillTransparency = EspConfig.HighlightTransparency or 0.6
-                        Highlight.Adornee = Object[EspConfig.HighlightAdornee] or EspConfig.HighlightAdornee
+                        Highlight.Adornee = Object.EspConfig.HighlightAdornee or EspConfig.HighlightAdornee or Object
                     else
                         local Highlight = Instance.new("Highlight")
                         Highlight.OutlineTransparency = 1
-                        Highlight.Adornee = Object[EspConfig.HighlightAdornee] or EspConfig.HighlightAdornee
+                        Highlight.Adornee = Object.EspConfig.HighlightAdornee or EspConfig.HighlightAdornee or Object
                         Highlight.FillColor = EspConfig.Color3 or Color3.new(1, 1, 1)
                         Highlight.FillTransparency = EspConfig.HighlightTransparency or 0.6
                         Highlight.Parent = BillboardGui
@@ -98,7 +98,7 @@ function EspFunctionList:DrawingObjects(Object, config)
         if EspConfig.HighlightAdornee then
             local Highlight = Instance.new("Highlight")
             Highlight.OutlineTransparency = 1
-            Highlight.Adornee = Object[EspConfig.HighlightAdornee] or EspConfig.HighlightAdornee
+            Highlight.Adornee = Object.EspConfig.HighlightAdornee or EspConfig.HighlightAdornee or Object
             Highlight.FillColor = EspConfig.Color3 or Color3.new(1, 1, 1)
             Highlight.FillTransparency = EspConfig.HighlightTransparency or 0.6
             Highlight.Parent = BillboardGui
