@@ -23,6 +23,18 @@ function EspFunctionList:DrawingObjects(Object, config)
     local customName = EspConfig.CustomName or Object.Name or "nil"
     local nameVisible = getVisibility(EspConfig.NameVisible)
     local distanceVisible = getVisibility(EspConfig.DistanceVisible)
+    local billboardGuiAdornee = EspConfig.BillboardGuiAdornee
+    local targetBillboardAdornee = Object
+    if billboardGuiAdornee then
+        if type(billboardGuiAdornee) == "string" then
+            local success, result = pcall(function()
+                return Object:FindFirstChild(billboardGuiAdornee)
+            end)
+            if success and result then
+                targetBillboardAdornee = result
+            end
+        end
+    end
     local existingBillboard
     for _, child in ipairs(hui:GetChildren()) do
         if child:IsA("BillboardGui") and child.Adornee == Object then
@@ -48,6 +60,7 @@ function EspFunctionList:DrawingObjects(Object, config)
         existingBillboard.Size = size
         existingBillboard.Name = billboardName
         existingBillboard.StudsOffsetWorldSpace = studsOffsetWorldSpace
+        existingBillboard.Adornee = targetBillboardAdornee
         local existingHighlight = existingBillboard:FindFirstChildOfClass("Highlight")
         if EspConfig.HighlightAdornee then
             local targetAdornee = Object
@@ -85,7 +98,7 @@ function EspFunctionList:DrawingObjects(Object, config)
         billboardGui.Name = billboardName
         billboardGui.Size = size
         billboardGui.ClipsDescendants = true
-        billboardGui.Adornee = Object
+        billboardGui.Adornee = targetBillboardAdornee
         billboardGui.MaxDistance = math.huge
         billboardGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
         billboardGui.StudsOffsetWorldSpace = studsOffsetWorldSpace
@@ -117,7 +130,7 @@ function EspFunctionList:DrawingObjects(Object, config)
         distanceLabel.Visible = distanceVisible
         distanceLabel.Parent = billboardGui
         if EspConfig.HighlightAdornee then
-        local targetAdornee = Object
+            local targetAdornee = Object
             if type(EspConfig.HighlightAdornee) == "string" then
                 local success, result = pcall(function()
                     return Object:FindFirstChild(EspConfig.HighlightAdornee)
@@ -262,7 +275,8 @@ print([[
   配置选项:
     - CustomName: 自定义显示名称
     - BillboardGuiName: 自定义BillboardGui名称
-    - HighlightAdornee: 高亮绑定对象 (字符串,布尔值 true=对象本身 false=不高亮)(从Object中查找子对象)
+    - BillboardGuiAdornee: BillboardGui绑定对象 (字符串)(从Object中查找子对象)
+    - HighlightAdornee: 高亮绑定对象 (字符串)(从Object中查找子对象)
     - StudsOffset: 偏移位置 (Vector3)
     - StudsOffsetWorldSpace: 世界偏移位置 (Vector3)
     - Size: 显示大小 (UDim2)
