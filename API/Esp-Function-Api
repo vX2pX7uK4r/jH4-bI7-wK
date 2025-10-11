@@ -259,7 +259,7 @@ print([[
   配置选项:
     - CustomName: 自定义显示名称
     - BillboardGuiName: 自定义BillboardGui名称
-    - HighlightAdornee: 自定义高亮显示对象 (Object)
+    - HighlightAdornee: 高亮绑定对象 (字符串, 为空则不启用高亮)(从Object中查找子对象)
     - StudsOffset: 偏移位置 (Vector3)
     - StudsOffsetWorldSpace: 世界偏移位置 (Vector3)
     - Size: 显示大小 (UDim2)
