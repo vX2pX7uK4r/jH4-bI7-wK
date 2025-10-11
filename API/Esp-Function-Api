@@ -31,18 +31,18 @@ function EspFunctionList:DrawingObjects(Object, config)
         end
     end
     if existingBillboard then
-        local nameLabel = existingBillboard:FindFirstChild("Name")
-        local distanceLabel = existingBillboard:FindFirstChild("Distance")
-        if nameLabel then
-            nameLabel.Text = customName
-            nameLabel.TextColor3 = color3
-            nameLabel.Visible = nameVisible
-            nameLabel.TextTransparency = textTransparency
+        local nameTextLabel = existingBillboard:FindFirstChild("Name")
+        local distanceTextLabel = existingBillboard:FindFirstChild("Distance")
+        if nameTextLabel and nameTextLabel:IsA("TextLabel") then
+            nameTextLabel.Text = customName
+            nameTextLabel.TextColor3 = color3
+            nameTextLabel.Visible = nameVisible
+            nameTextLabel.TextTransparency = textTransparency
         end
-        if distanceLabel then
-            distanceLabel.TextColor3 = distanceColor3
-            distanceLabel.Visible = distanceVisible
-            distanceLabel.TextTransparency = textTransparency
+        if distanceTextLabel and distanceTextLabel:IsA("TextLabel") then
+            distanceTextLabel.TextColor3 = distanceColor3
+            distanceTextLabel.Visible = distanceVisible
+            distanceTextLabel.TextTransparency = textTransparency
         end
         existingBillboard.StudsOffset = studsOffset
         existingBillboard.Size = size
@@ -54,11 +54,9 @@ function EspFunctionList:DrawingObjects(Object, config)
             local success, result = pcall(function()
                 return Object:FindFirstChild(EspConfig.HighlightAdornee)
             end)
-
             if success and result then
                 targetAdornee = result
             end
-
             if existingHighlight then
                 existingHighlight.FillColor = color3
                 existingHighlight.FillTransparency = highlightTransparency
@@ -74,7 +72,6 @@ function EspFunctionList:DrawingObjects(Object, config)
         elseif existingHighlight then
             existingHighlight:Destroy()
         end
-
         return "更新绘制:" .. existingBillboard.Name
     else
         local billboardGui = Instance.new("BillboardGui")
