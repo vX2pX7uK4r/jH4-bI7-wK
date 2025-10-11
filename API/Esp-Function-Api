@@ -31,8 +31,8 @@ function EspFunctionList:DrawingObjects(Object, config)
         end
     end
     if existingBillboard then
-        local nameLabel = existingBillboard.Name
-        local distanceLabel = existingBillboard.Distance
+        local nameLabel = existingBillboard:FindFirstChild("Name")
+        local distanceLabel = existingBillboard:FindFirstChild("Distance")
         if nameLabel then
             nameLabel.Text = customName
             nameLabel.TextColor3 = color3
