@@ -313,10 +313,10 @@ local a = {
     ["ZShVisor"] = "ZSh面罩"
 }
 local TranslationTableApi = {}
-function TranslationTableApi:Translate(CN)
+function TranslationTableApi:Translate(EN)
     for k, v in pairs(a) do
-        if v == CN then
-            return k
+        if k == EN then
+            return v
         end
     end
 end
