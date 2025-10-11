@@ -320,5 +320,5 @@ function TranslationTableApi:Translate(EN)
         end
     end
 end
-print("[翻译]API初始化成功,使用TranslationTableApi:Translate(中文物品名)进行翻译")
+print("[翻译]API初始化成功,使用Translate(英文)进行翻译")
 return TranslationTableApi
