@@ -311,7 +311,7 @@ game:GetService("RunService").Stepped:Connect(function()
                     if success then
                         DistanceLabel.Text = "["..distance.."m]"
                     else
-                        DistanceLabel.Text = "[计算错误]"
+                        BillboardGui:Destroy()
                     end
                 end
             end
