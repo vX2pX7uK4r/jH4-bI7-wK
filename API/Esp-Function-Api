@@ -21,7 +21,7 @@ function EspFunctionList:DrawingObjects(Object, config)
     local studsOffsetWorldSpace = EspConfig.StudsOffsetWorldSpace or Vector3.new(0, 0, 0)
     local size = EspConfig.Size or UDim2.new(0, 100, 0, 40)
     local billboardName = EspConfig.BillboardGuiName or Object.Name
-    local customName = EspConfig.CustomName or Object.Name or "nil"
+    local CustomText = EspConfig.CustomText or Object.Name or "nil"
     local nameVisible = getVisibility(EspConfig.NameVisible)
     local distanceVisible = getVisibility(EspConfig.DistanceVisible)
     local searchAdornee = Object
@@ -41,7 +41,7 @@ function EspFunctionList:DrawingObjects(Object, config)
         local nameTextLabel = existingBillboard:FindFirstChild("Name")
         local distanceTextLabel = existingBillboard:FindFirstChild("Distance")
         if nameTextLabel and nameTextLabel:IsA("TextLabel") then
-            nameTextLabel.Text = customName
+            nameTextLabel.Text = CustomText
             nameTextLabel.TextColor3 = color3
             nameTextLabel.Visible = nameVisible
             nameTextLabel.TextTransparency = textTransparency
@@ -102,7 +102,7 @@ function EspFunctionList:DrawingObjects(Object, config)
         nameLabel.TextScaled = true
         nameLabel.FontFace = font
         nameLabel.Size = UDim2.new(1, 0, 0.5, 0)
-        nameLabel.Text = customName
+        nameLabel.Text = CustomText
         nameLabel.TextColor3 = color3
         nameLabel.BackgroundTransparency = 1
         nameLabel.TextTransparency = textTransparency
@@ -262,7 +262,7 @@ print([[
 • DrawingObjects(Object, config) - 创建/更新ESP绘制
   参数: Object(目标对象), config(配置表)
   配置选项:
-    - CustomName: 自定义显示名称
+    - CustomText: 自定义文字
     - BillboardGuiName: 自定义BillboardGui名称
     - BillboardGuiAdornee: BillboardGui绑定对象 (字符串)(从Object中查找子对象)
     - HighlightAdornee: 高亮绑定对象 (字符串)(从Object中查找子对象)
