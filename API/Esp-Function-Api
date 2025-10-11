@@ -51,11 +51,13 @@ function EspFunctionList:DrawingObjects(Object, config)
         local existingHighlight = existingBillboard:FindFirstChildOfClass("Highlight")
         if EspConfig.HighlightAdornee then
             local targetAdornee = Object
-            local success, result = pcall(function()
-                return Object:FindFirstChild(EspConfig.HighlightAdornee)
-            end)
-            if success and result then
-                targetAdornee = result
+            if type(EspConfig.HighlightAdornee) == "string" then
+                local success, result = pcall(function()
+                    return Object:FindFirstChild(EspConfig.HighlightAdornee)
+                end)
+                if success and result then
+                    targetAdornee = result
+                end
             end
             if existingHighlight then
                 existingHighlight.FillColor = color3
@@ -69,8 +71,10 @@ function EspFunctionList:DrawingObjects(Object, config)
                 highlight.FillTransparency = highlightTransparency
                 highlight.Parent = existingBillboard
             end
-        elseif existingHighlight then
-            existingHighlight:Destroy()
+        else
+            if existingHighlight then
+                existingHighlight:Destroy()
+            end
         end
         return "更新绘制:" .. existingBillboard.Name
     else
