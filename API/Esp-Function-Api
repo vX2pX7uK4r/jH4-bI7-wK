@@ -28,12 +28,7 @@ function EspFunctionList:DrawingObjects(Required, EspConfig)
     local CustomText = Required.CustomText
     local nameVisible = getVisibility(EspConfig.NameVisible)
     local distanceVisible = getVisibility(EspConfig.DistanceVisible)
-    local searchAdornee = Object
-    if billboardGuiAdornee then
-        if type(billboardGuiAdornee) == "string" then
-            searchAdornee = Object:FindFirstChild(billboardGuiAdornee) or Object
-        end
-    end
+    local searchAdornee = billboardGuiAdornee
     local existingBillboard = nil
     for _, child in ipairs(hui:GetChildren()) do
         if child:IsA("BillboardGui") and child.Adornee == searchAdornee then
@@ -67,6 +62,8 @@ function EspFunctionList:DrawingObjects(Required, EspConfig)
             local targetAdornee = Object
             if type(highlightAdornee) == "string" then
                 targetAdornee = Object:FindFirstChild(highlightAdornee) or Object
+            else
+                targetAdornee = highlightAdornee
             end
             if existingHighlight then
                 existingHighlight.FillColor = color3
@@ -131,6 +128,8 @@ function EspFunctionList:DrawingObjects(Required, EspConfig)
             local targetAdornee = Object
             if type(highlightAdornee) == "string" then
                 targetAdornee = Object:FindFirstChild(highlightAdornee) or Object
+            else
+                targetAdornee = highlightAdornee
             end
             local highlight = Instance.new("Highlight")
             highlight.OutlineTransparency = 1
@@ -267,22 +266,22 @@ print([[
   参数: Required(必须参数 表), EspConfig(可选配置 表)
   return(返回字符串): 创建/更新状态
   Required参数说明:
-    Object(目标对象 必须 BasePart/Model/Folder等), 
-    CustomText(自定义文本 必须 字符串), 
-    BillboardGuiAdornee(绑定对象 可选 字符串/实例 默认Object)
+    Object(目标对象 必须 BasePart/Model/Folder等),
+    CustomText(自定义文本 必须 字符串),
+    BillboardGuiAdornee(BillboardGui绑定对象 必须 实例)
   EspConfig参数说明(均为可选):
-    CustomName(自定义名称 字符串 默认Object.Name),
-    BillboardGuiName(BillboardGui名称 字符串 默认Object.Name),
-    HighlightAdornee(高亮绑定对象 字符串/实例 默认无),
-    StudsOffset(偏移位置 Vector3 默认Vector3.new(0,3,0)),
-    StudsOffsetWorldSpace(世界空间偏移位置 Vector3 默认Vector3.new(0,0,0)),
-    Size(BillboardGui大小 UDim2 默认UDim2.new(0,100,0,40)),
-    Color3(文本颜色 Color3 默认Color3.new(1,1,1)),
-    DistanceColor3(距离文本颜色 Color3 默认Color3.new(1,1,1)),
-    NameVisible(名称可见性 布尔值 true/false 默认true),
-    DistanceVisible(距离可见性 布尔值 true/false 默认true),
-    HighlightTransparency(高亮透明度 数值 0-1 默认0.6),
-    TextTransparency(文本透明度 数值 0-1 默认0),
+    CustomName(自定义名称 字符串 默认Object.Name)
+    BillboardGuiName(BillboardGui名称 字符串 默认Object.Name)
+    HighlightAdornee(高亮绑定对象 字符串/实例 默认无)
+    StudsOffset(偏移位置 Vector3 默认Vector3.new(0,3,0))
+    StudsOffsetWorldSpace(世界空间偏移位置 Vector3 默认Vector3.new(0,0,0))
+    Size(BillboardGui大小 UDim2 默认UDim2.new(0,100,0,40))
+    Color3(文本颜色 Color3 默认Color3.new(1,1,1))
+    DistanceColor3(距离文本颜色 Color3 默认Color3.new(1,1,1))
+    NameVisible(名称可见性 布尔值 true/false 默认true)
+    DistanceVisible(距离可见性 布尔值 true/false 默认true)
+    HighlightTransparency(高亮透明度 数值 0-1 默认0.6)
+    TextTransparency(文本透明度 数值 0-1 默认0)
     MaxDistance(BillboardGui最大显示距离 数值 默认math.huge)
 ======================================
 • DestroyDrawing(Object, Mode) - 销毁指定ESP绘制
