@@ -331,12 +331,14 @@ function TranslationTableApi:GetTranslateTable()
 end
 
 function TranslationTableApi:Help()
-    print([[
-        ===翻译API使用帮助===
-        • Translate(EN) -- 返回所在游戏的翻译表中的对应中文,找不到则返回参数
-            EN: 需要翻译的英文
-        • GetTranslateTable() -- 返回翻译表
-    ]])
+print([[
+
+===翻译API使用帮助===
+• Translate(EN) -- 返回所在游戏的翻译表中的对应中文,找不到则返回参数
+    EN: 需要翻译的英文
+• GetTranslateTable() -- 返回翻译表
+• Help() -- 查看帮助
+]])
 end
 
 print("[翻译]API初始化成功,使用Help()查看帮助")
