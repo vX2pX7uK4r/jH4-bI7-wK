@@ -1,4 +1,5 @@
 local a = {
+    ["7336302630"]={
     ["12gaAP"] = "12号穿甲弹",
     ["12gaBuckshot"] = "12号鹿弹",
     ["12gaFlechette"] = "12号箭形弹",
@@ -311,12 +312,16 @@ local a = {
     ["Wrench"] = "扳手",
     ["ZSh"] = "ZSh头盔",
     ["ZShVisor"] = "ZSh面罩"
-}
+}}
 local TranslationTableApi = {}
 function TranslationTableApi:Translate(EN)
-    for k, v in pairs(a) do
-        if k == EN then
-            return v
+    local PlaceId = tostring(game.PlaceId)
+    local TranslateTable = a[PlaceId]
+    if TranslateTable then
+        for k, v in pairs(TranslateTable) do
+            if k == EN then
+                return v
+            end
         end
     end
 end
