@@ -1,5 +1,5 @@
 local a = {
-    ["7353845952"]={
+    ["7336302630"]={
     ["12gaAP"] = "12号穿甲弹",
     ["12gaBuckshot"] = "12号鹿弹",
     ["12gaFlechette"] = "12号箭形弹",
@@ -320,7 +320,7 @@ function TranslationTableApi:Translate(EN)
     if TranslateTable then
         for k, v in pairs(TranslateTable) do
             if k == EN then
-                return v
+                return v or EN
             end
         end
     end
@@ -330,5 +330,14 @@ function TranslationTableApi:GetTranslateTable()
     return a
 end
 
-print("[翻译]API初始化成功,使用Translate(英文)或GetTranslateTable()进行翻译")
+function TranslationTableApi:Help()
+    print([[
+        ===翻译API使用帮助===
+        • Translate(EN) -- 返回所在游戏的翻译表中的对应中文,找不到则返回参数
+            EN: 需要翻译的英文
+        • GetTranslateTable() -- 返回翻译表
+    ]])
+end
+
+print("[翻译]API初始化成功,使用Help()查看帮助")
 return TranslationTableApi
