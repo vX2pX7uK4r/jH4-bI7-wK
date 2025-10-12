@@ -9,9 +9,19 @@ local function getVisibility(configValue)
     end
 end
 
-function EspFunctionList:DrawingObjects(Object, config)
+function EspFunctionList:DrawingObjects(EspConfig)
+    if not EspConfig then return "配置为空" end
+    local Object = EspConfig.Object
     if not Object then return "对象为空" end
-    local EspConfig = config or {}
+    if EspConfig.CustomText == nil then
+        return "错误: CustomText 必须设置"
+    end
+    if EspConfig.BillboardGuiAdornee == nil then
+        return "错误: BillboardGuiAdornee 必须设置"
+    end
+    if EspConfig.HighlightAdornee == nil then
+        return "错误: HighlightAdornee 必须设置"
+    end
     local color3 = EspConfig.Color3 or Color3.new(1, 1, 1)
     local billboardGuiAdornee = EspConfig.BillboardGuiAdornee
     local distanceColor3 = EspConfig.DistanceColor3 or Color3.new(1, 1, 1)
@@ -21,7 +31,7 @@ function EspFunctionList:DrawingObjects(Object, config)
     local studsOffsetWorldSpace = EspConfig.StudsOffsetWorldSpace or Vector3.new(0, 0, 0)
     local size = EspConfig.Size or UDim2.new(0, 100, 0, 40)
     local billboardName = EspConfig.BillboardGuiName or Object.Name
-    local CustomText = EspConfig.CustomText or Object.Name or "nil"
+    local CustomText = EspConfig.CustomText
     local nameVisible = getVisibility(EspConfig.NameVisible)
     local distanceVisible = getVisibility(EspConfig.DistanceVisible)
     local searchAdornee = Object
@@ -259,23 +269,25 @@ function EspFunctionList:Help()
 print([[
 (Beta)
 ===ESP 绘制系统帮助===
-• DrawingObjects(Object, config) - 创建/更新ESP绘制
-  参数: Object(目标对象), config(配置表)
-  配置选项:
-    - CustomText: 自定义文字
-    - BillboardGuiName: 自定义BillboardGui名称
-    - BillboardGuiAdornee: BillboardGui绑定对象 (字符串)(从Object中查找子对象)
-    - HighlightAdornee: 高亮绑定对象 (字符串)(从Object中查找子对象)
-    - StudsOffset: 偏移位置 (Vector3)
-    - StudsOffsetWorldSpace: 世界偏移位置 (Vector3)
-    - Size: 显示大小 (UDim2)
-    - Color3: 显示颜色 (Color3)
-    - DistanceColor3: 距离显示颜色 (Color3)
-    - NameVisible: 名称显示 (true/false)
-    - DistanceVisible: 距离显示 (true/false)
-    - MaxDistance: 最大显示距离 (数字)(默认无限远)
-    - HighlightTransparency: 高亮透明度 (0-1)
-    - TextTransparency: 文字透明度 (0-1)
+• DrawingObjects(EspConfig) - 创建/更新ESP绘制
+  参数: EspConfig(配置内容 表)
+  return(返回字符串): 创建/更新状态
+  配置选项
+    Object = (目标对象 必须),
+    CustomText = (显示文本 必须),
+    BillboardGuiAdornee = (BillboardGui绑定对象 必须),
+    HighlightAdornee = (Highlight绑定对象 必须),
+    StudsOffset = (偏移位置 Vector3 默认(0,3,0)),
+    StudsOffsetWorldSpace = (世界空间偏移位置 Vector3 默认(0,0,0)),
+    Size = (绘制大小 UDim2 默认(0,100,40)),
+    Color3 = (文本/高亮颜色 Color3 默认(1,1,1)),
+    DistanceColor3 = (距离文本颜色 Color3 默认(1,1,1)),
+    TextTransparency = (文本透明度 Number 默认0),
+    HighlightTransparency = (高亮透明度 Number 默认0.6),
+    BillboardGuiName = (绘制名称 String 默认目标对象名称),
+    MaxDistance = (最大显示距离 Number 默认无限),
+    NameVisible = (名称显示 true/false 默认true),
+    DistanceVisible = (距离显示 true/false 默认true),
 ======================================
 • DestroyDrawing(Object, Mode) - 销毁指定ESP绘制
   参数: Object(目标对象/名称), Mode(模式 true=对象 false=名称 默认true)
