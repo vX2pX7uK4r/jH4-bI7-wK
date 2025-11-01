@@ -149,16 +149,16 @@ function EspFunctionList:DestroyDrawing(Object)
             for _, BillboardGui in ipairs(hui:GetChildren()) do
                 if BillboardGui:IsA("BillboardGui") and BillboardGui.Adornee == Object then
                     BillboardGui:Destroy()
-                    return "(Object)销毁绘制:"..Object.Name
                 end
             end
+            return "(Object)销毁绘制:"..Object.Name
         else
             for _, BillboardGui in ipairs(hui:GetChildren()) do
                 if BillboardGui:IsA("BillboardGui") and BillboardGui.Name == Object then
                     BillboardGui:Destroy()
-                    return "(Name)销毁绘制:"..Object
                 end
             end
+            return "(Name)销毁绘制:"..Object
         end
     end
 end
