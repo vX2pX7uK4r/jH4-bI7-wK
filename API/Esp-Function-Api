@@ -361,9 +361,13 @@ function EspFunctionList:CheckConfigFolderStatus(configFileName)
     return status
 end
 
-function EspFunctionList:ListConfigurationFiles()
+function EspFunctionList:ListConfigurationFiles(returnAsTable)
     if not isfolder("GALScript") then
-        return "GALScript 文件夹不存在"
+        if returnAsTable then
+            return {}
+        else
+            return "GALScript 文件夹不存在"
+        end
     end
     local files = listfiles("GALScript")
     local configFiles = {}
@@ -373,14 +377,18 @@ function EspFunctionList:ListConfigurationFiles()
             table.insert(configFiles, fileName)
         end
     end
-    if #configFiles == 0 then
-        return "GALScript 文件夹中没有找到配置文件"
+    if returnAsTable then
+        return configFiles
     else
-        local result = "找到 " .. tostring(#configFiles) .. " 个配置文件:\n"
-        for i, fileName in ipairs(configFiles) do
-            result = result .. tostring(i) .. ". " .. fileName .. "\n"
+        if #configFiles == 0 then
+            return "GALScript 文件夹中没有找到配置文件"
+        else
+            local result = "找到 " .. tostring(#configFiles) .. " 个配置文件:\n"
+            for i, fileName in ipairs(configFiles) do
+                result = result .. tostring(i) .. ". " .. fileName .. "\n"
+            end
+            return result
         end
-        return result
     end
 end
 
@@ -446,9 +454,9 @@ print([[
   参数: configFileName(配置文件名 可选 默认EspConfig.txt)
   return(返回字符串): 状态信息
 ======================================
-• ListConfigurationFiles() - 列出所有配置文件
-  参数: 无
-  return(返回字符串): 文件列表
+• ListConfigurationFiles(returnAsTable) - 列出所有配置文件
+  参数: returnAsTable(返回表格式 true/false 默认false)
+  return(返回字符串/表): 文件列表
 ======================================
 • Help() - 显示此帮助信息
 ]])
