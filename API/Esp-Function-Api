@@ -86,7 +86,7 @@ function EspFunctionList:DrawingObjects(Required, EspConfig)
     else
         local billboardGui = Instance.new("BillboardGui")
         billboardGui.AlwaysOnTop = true
-        billboardGui.Name = billboardName or CustomText
+        billboardGui.Name = billboardName
         billboardGui.Size = size
         billboardGui.ClipsDescendants = true
         billboardGui.Adornee = searchAdornee
