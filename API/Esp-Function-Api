@@ -286,8 +286,8 @@ function EspFunctionList:SaveConfigurationToFile(configFileName)
         makefolder("GALScript")
     end
     local allConfigs = self:GetConfiguration()
-    local jsonData = game:GetService("HttpService"):JSONEncode(allConfigs)
-    writefile(fullPath, jsonData)
+    local luaCode = "return " .. self:TableToLuaString(allConfigs)
+    writefile(fullPath, luaCode)
     return "配置已保存到 " .. fullPath
 end
 
@@ -297,35 +297,63 @@ function EspFunctionList:LoadConfigurationFromFile(configFileName)
     if not isfile(fullPath) then
         return "错误: 配置文件 " .. fullPath .. " 不存在"
     end
-    local success, fileContent = pcall(function()
-        return readfile(fullPath)
-    end)
+    local success, chunk = pcall(loadfile, fullPath)
     if not success then
-        return "错误: 无法读取配置文件 " .. fullPath
+        return "错误: 无法加载配置文件 " .. fullPath
     end
-    local httpService = game:GetService("HttpService")
-    local success, configTable = pcall(function()
-        return httpService:JSONDecode(fileContent)
-    end)
-    if success and type(configTable) == "table" then
-        CustomConfigurationTable = configTable
-        local configCount = 0
-        for _ in pairs(configTable) do
-            configCount = configCount + 1
+    if type(chunk) == "function" then
+        local success, result = pcall(chunk)
+        if success and type(result) == "table" then
+            CustomConfigurationTable = result
+            local configCount = 0
+            for _ in pairs(result) do
+                configCount = configCount + 1
+            end
+            return "配置已从文件 " .. fileName .. " 加载并覆盖现有配置，共加载 " .. tostring(configCount) .. " 个配置"
+        else
+            return "错误: 配置文件 " .. fileName .. " 格式无效"
         end
-        return "配置已从文件 " .. fileName .. " 加载并覆盖现有配置，共加载 " .. tostring(configCount) .. " 个配置"
     else
-        return "错误: 配置文件 " .. fileName .. " 格式无效或损坏"
+        return "错误: 配置文件 " .. fileName .. " 不是有效的 Lua 代码"
     end
 end
-
-local function countTableSize(tbl)
-    if type(tbl) ~= "table" then return 0 end
-    local count = 0
-    for _ in pairs(tbl) do
-        count = count + 1
+function EspFunctionList:TableToLuaString(tbl, indent)
+    indent = indent or 0
+    local spaces = string.rep(" ", indent)
+    local result = "{\n"
+    for key, value in pairs(tbl) do
+        result = result .. string.rep(" ", indent + 2)
+        if type(key) == "string" and string.match(key, "^[a-zA-Z_][a-zA-Z0-9_]*$") then
+            result = result .. key .. " = "
+        else
+            result = result .. "[" .. self:ValueToLuaString(key) .. "] = "
+        end
+        result = result .. self:ValueToLuaString(value, indent + 2) .. ",\n"
     end
-    return count
+    result = result .. spaces .. "}"
+    return result
+end
+function EspFunctionList:ValueToLuaString(value, indent)
+    indent = indent or 0
+    if type(value) == "string" then
+        return string.format("%q", value)
+    elseif type(value) == "number" then
+        return tostring(value)
+    elseif type(value) == "boolean" then
+        return tostring(value)
+    elseif type(value) == "table" then
+        return self:TableToLuaString(value, indent)
+    elseif typeof(value) == "Color3" then
+        return string.format("Color3.new(%f, %f, %f)", value.R, value.G, value.B)
+    elseif typeof(value) == "Vector3" then
+        return string.format("Vector3.new(%f, %f, %f)", value.X, value.Y, value.Z)
+    elseif typeof(value) == "UDim2" then
+        return string.format("UDim2.new(%f, %d, %f, %d)", 
+            value.X.Scale, value.X.Offset, 
+            value.Y.Scale, value.Y.Offset)
+    else
+        return "nil -- 不支持的类型: " .. typeof(value)
+    end
 end
 
 function EspFunctionList:DeleteConfigurationFile(configFileName)
@@ -353,11 +381,18 @@ function EspFunctionList:CheckConfigFolderStatus(configFileName)
             if success then
                 local charCount = #content
                 status = status .. "• 文件大小: " .. tostring(charCount) .. " 字符\n"
-                local success, configTable = pcall(function()
-                    return game:GetService("HttpService"):JSONDecode(content)
-                end)
-                if success and type(configTable) == "table" then
-                    status = status .. "• 配置数量: " .. tostring(countTableSize(configTable)) .. " 个"
+                local success, chunk = pcall(loadfile, fullPath)
+                if success and type(chunk) == "function" then
+                    local success, result = pcall(chunk)
+                    if success and type(result) == "table" then
+                        local configCount = 0
+                        for _ in pairs(result) do
+                            configCount = configCount + 1
+                        end
+                        status = status .. "• 配置数量: " .. tostring(configCount) .. " 个"
+                    else
+                        status = status .. "• 配置数量: 文件格式无效"
+                    end
                 else
                     status = status .. "• 配置数量: 文件格式无效"
                 end
@@ -368,7 +403,6 @@ function EspFunctionList:CheckConfigFolderStatus(configFileName)
     end
     return status
 end
-
 function EspFunctionList:ListConfigurationFiles(returnAsTable)
     if not isfolder("GALScript") then
         if returnAsTable then
@@ -399,7 +433,6 @@ function EspFunctionList:ListConfigurationFiles(returnAsTable)
         end
     end
 end
-
 
 function EspFunctionList:Help()
 print([[
@@ -449,10 +482,12 @@ print([[
 • SaveConfigurationToFile(configFileName) - 保存配置到文件
   参数: configFileName(配置文件名 可选 默认EspConfig.txt)
   return(返回字符串): 操作状态
+  说明: 配置以Lua表格式保存，支持Color3、Vector3等Roblox对象类型
 ======================================
 • LoadConfigurationFromFile(configFileName) - 从文件加载配置
   参数: configFileName(配置文件名 可选 默认EspConfig.txt)
   return(返回字符串): 操作状态
+  说明: 使用loadfile加载Lua格式配置文件，覆盖现有配置
 ======================================
 • DeleteConfigurationFile(configFileName) - 删除配置文件
   参数: configFileName(配置文件名 可选 默认EspConfig.txt)
@@ -461,10 +496,12 @@ print([[
 • CheckConfigFolderStatus(configFileName) - 检查配置文件夹状态
   参数: configFileName(配置文件名 可选 默认EspConfig.txt)
   return(返回字符串): 状态信息
+  说明: 显示文件夹、文件存在状态及配置数量等信息
 ======================================
 • ListConfigurationFiles(returnAsTable) - 列出所有配置文件
   参数: returnAsTable(返回表格式 true/false 默认false)
-  return(返回字符串/表): 文件列表
+  return(返回字符串/表): 文件列表或文件名表
+  说明: returnAsTable为true时返回文件名表，false时返回格式化的字符串
 ======================================
 • Help() - 显示此帮助信息
 ]])
