@@ -277,6 +277,111 @@ function EspFunctionList:GetConfiguration(Name)
     end
 end
 
+function EspFunctionList:SaveConfigurationToFile(configFileName)
+    local fileName = configFileName or "EspConfig.json"
+    local fullPath = "GALScript/" .. fileName
+    if not isfolder("GALScript") then
+        makefolder("GALScript")
+    end
+    local allConfigs = self:GetConfiguration()
+    local jsonData = game:GetService("HttpService"):JSONEncode(allConfigs)
+    writefile(fullPath, jsonData)
+    return "配置已保存到 " .. fullPath
+end
+
+function EspFunctionList:LoadConfigurationFromFile(configFileName)
+    local fileName = configFileName or "EspConfig.json"
+    local fullPath = "GALScript/" .. fileName
+    if not isfile(fullPath) then
+        return "错误: 配置文件 " .. fullPath .. " 不存在"
+    end
+    local success, fileContent = pcall(readfile, fullPath)
+    if not success then
+        return "错误: 无法读取配置文件 " .. fullPath
+    end
+    local success, configTable = pcall(function()
+        return game:GetService("HttpService"):JSONDecode(fileContent)
+    end)
+    if success and type(configTable) == "table" then
+        CustomConfigurationTable = configTable
+        return "配置已从文件 " .. fileName .. " 加载并覆盖现有配置，共加载 " .. tostring(countTableSize(configTable)) .. " 个配置"
+    else
+        return "错误: 配置文件 " .. fileName .. " 格式无效或损坏"
+    end
+end
+
+local function countTableSize(tbl)
+    local count = 0
+    for _ in pairs(tbl) do
+        count = count + 1
+    end
+    return count
+end
+
+function EspFunctionList:DeleteConfigurationFile(configFileName)
+    local fileName = configFileName or "EspConfig.json"
+    local fullPath = "GALScript/" .. fileName
+    if isfile(fullPath) then
+        delfile(fullPath)
+        return "配置文件 " .. fileName .. " 已删除"
+    else
+        return "配置文件 " .. fileName .. " 不存在，无需删除"
+    end
+end
+
+function EspFunctionList:CheckConfigFolderStatus(configFileName)
+    local fileName = configFileName or "EspConfig.json"
+    local fullPath = "GALScript/" .. fileName
+    local folderExists = isfolder("GALScript")
+    local fileExists = isfile(fullPath)
+    local status = "配置文件夹状态:\n"
+    status = status .. "• GALScript 文件夹: " .. (folderExists and "存在" or "不存在") .. "\n"
+    if folderExists then
+        status = status .. "• 配置文件 " .. fileName .. ": " .. (fileExists and "存在" or "不存在") .. "\n"
+        if fileExists then
+            local success, content = pcall(readfile, fullPath)
+            if success then
+                local charCount = #content
+                status = status .. "• 文件大小: " .. tostring(charCount) .. " 字符\n"
+                local success, configTable = pcall(function()
+                    return game:GetService("HttpService"):JSONDecode(content)
+                end)
+                if success and type(configTable) == "table" then
+                    status = status .. "• 配置数量: " .. tostring(countTableSize(configTable)) .. " 个"
+                else
+                    status = status .. "• 配置数量: 文件格式无效"
+                end
+            else
+                status = status .. "• 文件大小: 无法读取"
+            end
+        end
+    end
+    return status
+end
+
+function EspFunctionList:ListConfigurationFiles()
+    if not isfolder("GALScript") then
+        return "GALScript 文件夹不存在"
+    end
+    local files = listfiles("GALScript")
+    local configFiles = {}
+    for _, filePath in ipairs(files) do
+        if isfile(filePath) and string.match(filePath, "%.json$") then
+            local fileName = string.match(filePath, "([^/]+)$")
+            table.insert(configFiles, fileName)
+        end
+    end
+    if #configFiles == 0 then
+        return "GALScript 文件夹中没有找到 JSON 配置文件"
+    else
+        local result = "找到 " .. tostring(#configFiles) .. " 个配置文件:\n"
+        for i, fileName in ipairs(configFiles) do
+            result = result .. tostring(i) .. ". " .. fileName .. "\n"
+        end
+        return result
+    end
+end
+
 function EspFunctionList:Help()
 print([[
 (Beta)
@@ -321,6 +426,26 @@ print([[
 • GetConfiguration(Name) - 获取自定义配置
   参数: Name(配置名称 可选)
   return(返回表/字符串): 配置内容/操作状态
+======================================
+• SaveConfigurationToFile(configFileName) - 保存配置到文件
+  参数: configFileName(配置文件名 可选 默认EspConfig.json)
+  return(返回字符串): 操作状态
+======================================
+• LoadConfigurationFromFile(configFileName) - 从文件加载配置
+  参数: configFileName(配置文件名 可选 默认EspConfig.json)
+  return(返回字符串): 操作状态
+======================================
+• DeleteConfigurationFile(configFileName) - 删除配置文件
+  参数: configFileName(配置文件名 可选 默认EspConfig.json)
+  return(返回字符串): 操作状态
+======================================
+• CheckConfigFolderStatus(configFileName) - 检查配置文件夹状态
+  参数: configFileName(配置文件名 可选 默认EspConfig.json)
+  return(返回字符串): 状态信息
+======================================
+• ListConfigurationFiles() - 列出所有配置文件
+  参数: 无
+  return(返回字符串): 文件列表
 ======================================
 • Help() - 显示此帮助信息
 ]])
