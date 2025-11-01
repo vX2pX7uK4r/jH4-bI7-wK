@@ -297,16 +297,23 @@ function EspFunctionList:LoadConfigurationFromFile(configFileName)
     if not isfile(fullPath) then
         return "错误: 配置文件 " .. fullPath .. " 不存在"
     end
-    local success, fileContent = pcall(readfile, fullPath)
+    local success, fileContent = pcall(function()
+        return readfile(fullPath)
+    end)
     if not success then
         return "错误: 无法读取配置文件 " .. fullPath
     end
+    local httpService = game:GetService("HttpService")
     local success, configTable = pcall(function()
-        return game:GetService("HttpService"):JSONDecode(fileContent)
+        return httpService:JSONDecode(fileContent)
     end)
     if success and type(configTable) == "table" then
         CustomConfigurationTable = configTable
-        return "配置已从文件 " .. fileName .. " 加载并覆盖现有配置，共加载 " .. tostring(countTableSize(configTable)) .. " 个配置"
+        local configCount = 0
+        for _ in pairs(configTable) do
+            configCount = configCount + 1
+        end
+        return "配置已从文件 " .. fileName .. " 加载并覆盖现有配置，共加载 " .. tostring(configCount) .. " 个配置"
     else
         return "错误: 配置文件 " .. fileName .. " 格式无效或损坏"
     end
