@@ -24,7 +24,7 @@ function EspFunctionList:DrawingObjects(Required, EspConfig)
     local studsOffset = EspConfig.StudsOffset or Vector3.new(0, 0, 0)
     local studsOffsetWorldSpace = EspConfig.StudsOffsetWorldSpace or Vector3.new(0, 0, 0)
     local size = EspConfig.Size or UDim2.new(0, 100, 0, 40)
-    local billboardName = EspConfig.BillboardGuiName or Object.Name
+    local billboardName = Required.BillboardGuiName or Object.Name
     local CustomText = Required.CustomText
     local nameVisible = getVisibility(EspConfig.NameVisible)
     local distanceVisible = getVisibility(EspConfig.DistanceVisible)
@@ -269,9 +269,9 @@ print([[
     Object(目标对象 必须 BasePart/Model/Folder等),
     CustomText(自定义文本 必须 字符串),
     BillboardGuiAdornee(BillboardGui绑定对象 必须 实例)
+    BillboardGuiName(BillboardGui名称 字符串 默认Object.Name)
   EspConfig参数说明(均为可选):
     CustomName(自定义名称 字符串 默认Object.Name)
-    BillboardGuiName(BillboardGui名称 字符串 默认Object.Name)
     HighlightAdornee(高亮绑定对象 字符串/实例 默认无)
     StudsOffset(偏移位置 Vector3 默认Vector3.new(0,3,0))
     StudsOffsetWorldSpace(世界空间偏移位置 Vector3 默认Vector3.new(0,0,0))
