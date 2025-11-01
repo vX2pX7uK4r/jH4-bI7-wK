@@ -224,8 +224,27 @@ function EspFunctionList:AddConfiguration(Name, config, delete)
         if type(config) ~= "table" then
             return "配置内容必须是表"
         end
-        CustomConfigurationTable[Name] = config
-        return "名为"..Name.."的配置添加成功\n"..game:GetService("HttpService"):JSONEncode(config)
+        if CustomConfigurationTable[Name] then
+            local oldConfig = CustomConfigurationTable[Name]
+            local function mergeTables(t1, t2)
+                local result = {}
+                for k, v in pairs(t1) do
+                    result[k] = v
+                end
+                for k, v in pairs(t2) do
+                    if type(v) == "table" and type(result[k]) == "table" then
+                        result[k] = mergeTables(result[k], v)
+                    else
+                        result[k] = v
+                    end
+                end
+                return result
+            end
+            CustomConfigurationTable[Name] = mergeTables(oldConfig, config)
+        else
+            CustomConfigurationTable[Name] = config
+        end
+        return "名为"..Name.."的配置添加成功\n"..game:GetService("HttpService"):JSONEncode(CustomConfigurationTable[Name])
     end)
     if success then
         return result
