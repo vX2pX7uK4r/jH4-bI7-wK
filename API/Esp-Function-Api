@@ -143,9 +143,9 @@ function EspFunctionList:DrawingObjects(Required, EspConfig)
 end
 
 
-function EspFunctionList:DestroyDrawing(Object,Mode)
+function EspFunctionList:DestroyDrawing(Object)
     if Object then
-        if getVisibility(Mode) then
+        if not type(Object) == "string" then
             for _, BillboardGui in ipairs(hui:GetChildren()) do
                 if BillboardGui:IsA("BillboardGui") and BillboardGui.Adornee == Object then
                     BillboardGui:Destroy()
@@ -284,8 +284,8 @@ print([[
     TextTransparency(文本透明度 数值 0-1 默认0)
     MaxDistance(BillboardGui最大显示距离 数值 默认math.huge)
 ======================================
-• DestroyDrawing(Object, Mode) - 销毁指定ESP绘制
-  参数: Object(目标对象/名称), Mode(模式 true=对象 false=名称 默认true)
+• DestroyDrawing(Object) - 销毁指定ESP绘制
+  参数: Object(目标对象/名称)
   return(返回字符串): 销毁状态
 ====================================== 
 • DestroyAllDrawing() - 销毁所有绘制
@@ -351,21 +351,3 @@ end)
 print("[绘制(Beta)]Api初始化成功,使用Help()查看帮助")
 
 return EspFunctionList
-
-
---[[
-{
-    CustomName = nil,
-    BillboardGuiName = nil,
-    BillboardGuiAdornee = nil,
-    HighlightAdornee = nil,
-    StudsOffset = Vector3.new(0, 3, 0),
-    Size = UDim2.new(0, 100, 0, 40),
-    Color3 = Color3.new(0, 1, 0),
-    DistanceColor3 = Color3.new(1, 1, 0),
-    NameVisible = true,
-    DistanceVisible = true,
-    HighlightTransparency = nil,
-    TextTransparency = nil,
-}
-]]
