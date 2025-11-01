@@ -307,7 +307,7 @@ print([[
 ]])
 end
 
-game:GetService("RunService").Stepped:Connect(function()
+game:GetService("RunService").RenderStepped:Connect(function()
     if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
         for _, BillboardGui in ipairs(hui:GetChildren()) do
             if BillboardGui:IsA("BillboardGui") and BillboardGui.Adornee then
