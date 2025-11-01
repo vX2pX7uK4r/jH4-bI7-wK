@@ -277,8 +277,10 @@ function EspFunctionList:GetConfiguration(Name)
     end
 end
 
+
+--保存配置函数
 function EspFunctionList:SaveConfigurationToFile(configFileName)
-    local fileName = configFileName or "EspConfig.json"
+    local fileName = configFileName or "EspConfig.txt"
     local fullPath = "GALScript/" .. fileName
     if not isfolder("GALScript") then
         makefolder("GALScript")
@@ -290,7 +292,7 @@ function EspFunctionList:SaveConfigurationToFile(configFileName)
 end
 
 function EspFunctionList:LoadConfigurationFromFile(configFileName)
-    local fileName = configFileName or "EspConfig.json"
+    local fileName = configFileName or "EspConfig.txt"
     local fullPath = "GALScript/" .. fileName
     if not isfile(fullPath) then
         return "错误: 配置文件 " .. fullPath .. " 不存在"
@@ -319,7 +321,7 @@ local function countTableSize(tbl)
 end
 
 function EspFunctionList:DeleteConfigurationFile(configFileName)
-    local fileName = configFileName or "EspConfig.json"
+    local fileName = configFileName or "EspConfig.txt"
     local fullPath = "GALScript/" .. fileName
     if isfile(fullPath) then
         delfile(fullPath)
@@ -330,7 +332,7 @@ function EspFunctionList:DeleteConfigurationFile(configFileName)
 end
 
 function EspFunctionList:CheckConfigFolderStatus(configFileName)
-    local fileName = configFileName or "EspConfig.json"
+    local fileName = configFileName or "EspConfig.txt"
     local fullPath = "GALScript/" .. fileName
     local folderExists = isfolder("GALScript")
     local fileExists = isfile(fullPath)
@@ -366,13 +368,13 @@ function EspFunctionList:ListConfigurationFiles()
     local files = listfiles("GALScript")
     local configFiles = {}
     for _, filePath in ipairs(files) do
-        if isfile(filePath) and string.match(filePath, "%.json$") then
+        if isfile(filePath) then
             local fileName = string.match(filePath, "([^/]+)$")
             table.insert(configFiles, fileName)
         end
     end
     if #configFiles == 0 then
-        return "GALScript 文件夹中没有找到 JSON 配置文件"
+        return "GALScript 文件夹中没有找到配置文件"
     else
         local result = "找到 " .. tostring(#configFiles) .. " 个配置文件:\n"
         for i, fileName in ipairs(configFiles) do
@@ -381,6 +383,7 @@ function EspFunctionList:ListConfigurationFiles()
         return result
     end
 end
+
 
 function EspFunctionList:Help()
 print([[
@@ -428,19 +431,19 @@ print([[
   return(返回表/字符串): 配置内容/操作状态
 ======================================
 • SaveConfigurationToFile(configFileName) - 保存配置到文件
-  参数: configFileName(配置文件名 可选 默认EspConfig.json)
+  参数: configFileName(配置文件名 可选 默认EspConfig.txt)
   return(返回字符串): 操作状态
 ======================================
 • LoadConfigurationFromFile(configFileName) - 从文件加载配置
-  参数: configFileName(配置文件名 可选 默认EspConfig.json)
+  参数: configFileName(配置文件名 可选 默认EspConfig.txt)
   return(返回字符串): 操作状态
 ======================================
 • DeleteConfigurationFile(configFileName) - 删除配置文件
-  参数: configFileName(配置文件名 可选 默认EspConfig.json)
+  参数: configFileName(配置文件名 可选 默认EspConfig.txt)
   return(返回字符串): 操作状态
 ======================================
 • CheckConfigFolderStatus(configFileName) - 检查配置文件夹状态
-  参数: configFileName(配置文件名 可选 默认EspConfig.json)
+  参数: configFileName(配置文件名 可选 默认EspConfig.txt)
   return(返回字符串): 状态信息
 ======================================
 • ListConfigurationFiles() - 列出所有配置文件
