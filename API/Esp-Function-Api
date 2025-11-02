@@ -15,6 +15,22 @@ function EspFunctionList:DrawingObjects(Required, EspConfig)
     if Required.CustomText == nil then return "错误: Required.CustomText 必须设置" end
     if Required.BillboardGuiAdornee == nil then return "错误: Required.BillboardGuiAdornee 必须设置" end
     if not EspConfig then EspConfig = {} end
+    local createDistance = EspConfig.CreateDistance
+    if createDistance then
+        local player = game.Players.LocalPlayer
+        if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            local targetPosition
+            if Required.BillboardGuiAdornee:IsA("BasePart") then
+                targetPosition = Required.BillboardGuiAdornee.Position
+            else
+                targetPosition = Required.BillboardGuiAdornee:GetPivot().Position
+            end
+            local distance = (targetPosition - player.Character.HumanoidRootPart.Position).Magnitude
+            if distance > createDistance then
+                return "距离过远，不创建绘制: " .. math.floor(distance) .. " > " .. math.floor(createDistance)
+            end
+        end
+    end
     local Object = Required.Object
     local color3 = EspConfig.Color3 or Color3.new(1, 1, 1)
     local billboardGuiAdornee = Required.BillboardGuiAdornee
@@ -458,6 +474,7 @@ print([[
     DistanceVisible(距离可见性 布尔值 true/false 默认true)
     HighlightTransparency(高亮透明度 数值 0-1 默认0.6)
     TextTransparency(文本透明度 数值 0-1 默认0)
+    CreateDistance(创建距离 数值 默认无限制)
     MaxDistance(BillboardGui最大显示距离 数值 默认math.huge)
 ======================================
 • DestroyDrawing(Object) - 销毁指定ESP绘制
