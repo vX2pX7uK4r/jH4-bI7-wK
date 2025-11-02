@@ -145,7 +145,7 @@ end
 
 function EspFunctionList:DestroyDrawing(Object)
     if Object then
-        if not type(Object) == "string" then
+        if type(Object) ~= "string" then
             for _, BillboardGui in ipairs(hui:GetChildren()) do
                 if BillboardGui:IsA("BillboardGui") and BillboardGui.Adornee == Object then
                     BillboardGui:Destroy()
