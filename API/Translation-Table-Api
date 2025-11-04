@@ -420,15 +420,23 @@ local a = {
 	},
 }
 local TranslationTableApi = {}
-function TranslationTableApi:Translate(EN)
+function TranslationTableApi:Translate(EN,Mode)
 	local PlaceId = tostring(game.PlaceId)
 	local TranslateTable = a[PlaceId]
 	if TranslateTable then
-		for k, v in pairs(TranslateTable) do
-			if k == EN then
-				return v or EN
+        if Mode then
+			for k, v in pairs(TranslateTable) do
+				if v == EN then
+					return k or EN
+				end
 			end
-		end
+        else
+			for k, v in pairs(TranslateTable) do
+				if k == EN then
+					return v or EN
+				end
+			end
+        end
 	end
 end
 
@@ -440,8 +448,9 @@ function TranslationTableApi:Help()
 	print([[
 
 ===翻译API使用帮助===
-• Translate(EN) -- 返回所在游戏的翻译表中的对应中文,找不到则返回参数
+• Translate(EN,Mode) -- 返回所在游戏的翻译表中的对应中文,找不到则返回参数
     EN: 需要翻译的英文
+    Mode: 返回中文/英文
 • GetTranslateTable() -- 返回翻译表
 • Help() -- 查看帮助
 ]])
