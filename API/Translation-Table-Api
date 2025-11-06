@@ -428,19 +428,16 @@ function TranslationTableApi:Translate(EN,Mode)
 			for k, v in pairs(TranslateTable) do
 				if v == EN then
 					return k
-				else
-					return EN
 				end
 			end
         else
 			for k, v in pairs(TranslateTable) do
 				if k == EN then
 					return v
-				else
-					return EN
 				end
 			end
         end
+		return EN
 	end
 end
 
