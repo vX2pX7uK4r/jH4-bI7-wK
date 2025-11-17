@@ -418,25 +418,71 @@ local a = {
 		["Firework"] = "烟花",
 		["Pumpkin"] = "南瓜",
 	},
+	["122160128185618"] = {
+		["BlueberryBush"] = "蓝莓",
+		["CrimsonPlant"] = "绯红",
+		["PotatoPlant"] = "土豆",
+		["StrawberryBush"] = "草莓",
+		["ChargedOre"] = "带电矿石",
+		["Coal"] = "煤炭",
+		["CopperOre"] = "铜",
+		["IronOre"] = "铁",
+		["Sandstone"] = "砂岩",
+		["Stone"] = "石头",
+		["Palm1"] = "棕榈树",
+		["Palm2"] = "棕榈树",
+		["Palm3"] = "棕榈树",
+		["Tree1"] = "树",
+		["Tree2"] = "树",
+		["Tree3"] = "树",
+		["Tree4"] = "树",
+		["Tree5"] = "树",
+		["CommonLoot"] = "普通战利品",
+		["MedicalLoot"] = "医疗战利品",
+		["RareLoot"] = "稀有战利品",
+		["UncommonLoot"] = "罕见战利品",
+		["Zombie"] = "僵尸",
+		["Blood Moon Zombie"] = "血月僵尸",
+		["Mutant Blood Moon Zombie"] = "变异血月僵尸",
+		["Eclipse Zombie"] = "日食僵尸",
+		["Mutant Eclipse Zombie"] = "变异日食僵尸",
+		["Halloween Zombie Boss"] = "万圣节僵尸首领",
+		["Charged Zombie"] = "充能僵尸",
+		["Charged Zombie Boss"] = "充能僵尸首领",
+		["Electric Zombie"] = "雷电僵尸",
+		["Fire Zombie"] = "火焰僵尸",
+		["Radioactive Zombie"] = "辐射僵尸",
+		["Dusty Zombie"] = "尘封僵尸",
+		["Fog Zombie"] = "迷雾僵尸",
+		["Mutant Fog Zombie"] = "变异迷雾僵尸",
+		["Overgrown Zombie Boss"] = "蔓生僵尸首领",
+		["Infected Zombie"] = "感染僵尸",
+		["Infected Zombie Boss"] = "感染僵尸首领",
+		["Parasite Zombie"] = "寄生僵尸",
+		["Headless Zombie"] = "无头僵尸",
+		["Mutant Zombie"] = "变异僵尸",
+		["Voidbloom Zombie"] = "虚空绽放僵尸",
+		["Voidbloom Mutant Zombie"] = "虚空绽放变异僵尸",
+	},
 }
 local TranslationTableApi = {}
-function TranslationTableApi:Translate(EN,Mode)
+function TranslationTableApi:Translate(EN, Mode)
 	local PlaceId = tostring(game.PlaceId)
 	local TranslateTable = a[PlaceId]
 	if TranslateTable then
-        if Mode then
+		if Mode then
 			for k, v in pairs(TranslateTable) do
 				if v == EN then
 					return k
 				end
 			end
-        else
+		else
 			for k, v in pairs(TranslateTable) do
 				if k == EN then
 					return v
 				end
 			end
-        end
+		end
 		return EN
 	end
 end
