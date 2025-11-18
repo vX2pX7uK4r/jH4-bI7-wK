@@ -114,10 +114,14 @@ function General:ToogleFullbright(enable)
 	end
 end
 
-function General:Nofog()
+function General:Nofog(enable)
 	game:GetService("Lighting").FogEnd = 100000
 	for i,v in pairs(game:GetService("Lighting"):GetDescendants()) do
-		v:Destroy()
+        if v:IsA("Atmosphere") and enable then
+            v:Destroy()
+        else
+            v:Destroy()
+        end
 	end
 end
 
@@ -135,7 +139,8 @@ print([[
 • ToogleFullbright(enabled)
   enabled: true开启地图亮度, false关闭地图亮度
 
-• Nofog()
+• Nofog(enabled)
+  enabled: true删除Atmosphere false删除Lighting所有的对象
 • Help()
 ]])
 end
