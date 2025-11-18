@@ -3,6 +3,7 @@ local flying = false
 local flyConnection = nil
 local Noclipping = nil
 local General = {}
+local brightLoop = nil
 
 function General:ToggleFlight(enable, speed)
     if speed and type(speed) == "number" then
@@ -94,6 +95,32 @@ function General:ToggleNoclip(enabled)
     end
 end
 
+function General:ToogleFullbright(enable)
+	if enable then
+		if brightLoop then
+			brightLoop:Disconnect()
+		end
+		brightLoop = game:GetService("RunService").RenderStepped:Connect(function()
+			game:GetService("Lighting").Brightness = 2
+			game:GetService("Lighting").ClockTime = 14
+			game:GetService("Lighting").FogEnd = 100000
+			game:GetService("Lighting").GlobalShadows = false
+			game:GetService("Lighting").OutdoorAmbient = Color3.fromRGB(128, 128, 128)
+        end)
+    else
+		if brightLoop then
+			brightLoop:Disconnect()
+		end
+	end
+end
+
+function General:Nofog()
+	game:GetService("Lighting").FogEnd = 100000
+	for i,v in pairs(game:GetService("Lighting"):GetDescendants()) do
+		v:Destroy()
+	end
+end
+
 function General:Help()
 print([[
 
@@ -105,7 +132,11 @@ print([[
 • ToggleNoclip(enabled)
   enabled: true开启穿墙, false关闭穿墙
 
-• Help() -- 查看帮助
+• ToogleFullbright(enabled)
+  enabled: true开启地图亮度, false关闭地图亮度
+
+• Nofog()
+• Help()
 ]])
 end
 
